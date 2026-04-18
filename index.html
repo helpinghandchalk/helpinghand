@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    const isLocal =
+      location.hostname === 'localhost' ||
+      location.hostname === '127.0.0.1';
+
+    if (!isLocal) {
+      const targetHost = 'helpinghand.co.uk';
+      const shouldRedirect =
+        location.protocol !== 'https:' ||
+        location.hostname !== targetHost;
+
+      if (shouldRedirect) {
+        location.replace(
+          'https://' +
+          targetHost +
+          location.pathname +
+          location.search +
+          location.hash
+        );
+      }
+    }
+  </script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Helping Hand</title>
@@ -366,7 +389,7 @@
             max-camera-orbit="auto 85deg 112%"
             field-of-view="16deg"
             scale="0.92 0.92 0.92"
-            interpolation-decay="400"
+            interpolation-decay="180"
             style="--poster-color: transparent;"
           >
             <div class="product-fallback" slot="poster">
@@ -467,35 +490,27 @@
     const START_ORBIT = '-38deg 66deg 112%';
     const START_TARGET = '0m 0m 0m';
     const START_SCALE = '0.92 0.92 0.92';
-    const RETURN_DELAY = 120;
 
-    let hasInitialized = false;
-    let resetTimer = null;
-    let isResetting = false;
+    let isDragging = false;
+    let booted = false;
 
-    function clearResetTimer() {
-      if (resetTimer) {
-        clearTimeout(resetTimer);
-        resetTimer = null;
-      }
-    }
-
-    function applyStartImmediately() {
+    function hardSetStartPose() {
       viewer.autoRotate = false;
       viewer.jumpCameraToGoal = true;
       viewer.scale = START_SCALE;
       viewer.cameraTarget = START_TARGET;
       viewer.cameraOrbit = START_ORBIT;
 
+      if (typeof viewer.updateFraming === 'function') {
+        viewer.updateFraming();
+      }
+
       if (typeof viewer.resetTurntableRotation === 'function') {
         viewer.resetTurntableRotation(0);
       }
     }
 
-    function resetToStartSmoothly() {
-      if (!hasInitialized || isResetting) return;
-
-      isResetting = true;
+    function springBackNow() {
       viewer.autoRotate = false;
       viewer.jumpCameraToGoal = false;
       viewer.scale = START_SCALE;
@@ -507,63 +522,50 @@
       }
 
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          viewer.autoRotate = true;
-          isResetting = false;
-        });
+        viewer.autoRotate = true;
       });
     }
 
-    function scheduleReset() {
-      if (!hasInitialized) return;
-      clearResetTimer();
-      resetTimer = setTimeout(() => {
-        resetToStartSmoothly();
-      }, RETURN_DELAY);
-    }
-
     viewer.addEventListener('load', () => {
-      viewer.scale = START_SCALE;
-
-      if (typeof viewer.updateFraming === 'function') {
-        viewer.updateFraming();
-      }
-
-      applyStartImmediately();
+      hardSetStartPose();
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           viewer.jumpCameraToGoal = false;
           viewer.autoRotate = true;
-          hasInitialized = true;
+          booted = true;
         });
       });
     });
 
-    viewer.addEventListener('pointerdown', () => {
-      if (!hasInitialized) return;
-      clearResetTimer();
-      isResetting = false;
+    viewer.addEventListener('pointerdown', (event) => {
+      if (!booted) return;
+      isDragging = true;
       viewer.autoRotate = false;
+
+      if (event.pointerId != null && viewer.setPointerCapture) {
+        try {
+          viewer.setPointerCapture(event.pointerId);
+        } catch (err) {}
+      }
     }, true);
 
-    viewer.addEventListener('camera-change', (event) => {
-      if (!hasInitialized) return;
+    function finishDrag() {
+      if (!booted || !isDragging) return;
+      isDragging = false;
+      springBackNow();
+    }
 
-      const source = event.detail && event.detail.source;
-
-      if (source === 'user-interaction') {
-        clearResetTimer();
-        viewer.autoRotate = false;
-        isResetting = false;
-        scheduleReset();
-      }
-    });
-
-    window.addEventListener('blur', () => {
-      if (!hasInitialized) return;
-      scheduleReset();
-    });
+    viewer.addEventListener('pointerup', finishDrag, true);
+    viewer.addEventListener('pointercancel', finishDrag, true);
+    viewer.addEventListener('lostpointercapture', finishDrag, true);
+    viewer.addEventListener('mouseup', finishDrag, true);
+    viewer.addEventListener('touchend', finishDrag, true);
+    window.addEventListener('pointerup', finishDrag, true);
+    window.addEventListener('pointercancel', finishDrag, true);
+    window.addEventListener('mouseup', finishDrag, true);
+    window.addEventListener('touchend', finishDrag, true);
+    window.addEventListener('blur', finishDrag, true);
   </script>
 </body>
 </html>
