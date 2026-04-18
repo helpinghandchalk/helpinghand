@@ -469,10 +469,23 @@
     const START_SCALE = '0.92 0.92 0.92';
 
     let interacting = false;
+    let hasInitialized = false;
+
+    function hardSetStartState() {
+      viewer.autoRotate = false;
+      viewer.jumpCameraToGoal = true;
+      viewer.scale = START_SCALE;
+      viewer.cameraTarget = START_TARGET;
+      viewer.cameraOrbit = START_ORBIT;
+
+      if (viewer.resetTurntableRotation) {
+        viewer.resetTurntableRotation(0);
+      }
+    }
 
     function resetToStart() {
       viewer.autoRotate = false;
-      viewer.jumpCameraToGoal = false; // allow smooth motion
+      viewer.jumpCameraToGoal = false;
       viewer.scale = START_SCALE;
       viewer.cameraTarget = START_TARGET;
       viewer.cameraOrbit = START_ORBIT;
@@ -482,26 +495,39 @@
       }
 
       requestAnimationFrame(() => {
-        viewer.jumpCameraToGoal = false;
-        viewer.autoRotate = true;
+        requestAnimationFrame(() => {
+          viewer.jumpCameraToGoal = false;
+          viewer.autoRotate = true;
+        });
       });
     }
 
     viewer.addEventListener('load', () => {
       viewer.scale = START_SCALE;
+
       if (viewer.updateFraming) {
         viewer.updateFraming();
       }
-      resetToStart();
+
+      hardSetStartState();
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          viewer.jumpCameraToGoal = false;
+          viewer.autoRotate = true;
+          hasInitialized = true;
+        });
+      });
     });
 
     viewer.addEventListener('pointerdown', () => {
+      if (!hasInitialized) return;
       interacting = true;
       viewer.autoRotate = false;
     });
 
     function endInteraction() {
-      if (!interacting) return;
+      if (!hasInitialized || !interacting) return;
       interacting = false;
       resetToStart();
     }
