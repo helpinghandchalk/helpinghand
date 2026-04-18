@@ -6,21 +6,14 @@
       location.hostname === 'localhost' ||
       location.hostname === '127.0.0.1';
 
-    if (!isLocal) {
-      const targetHost = 'helpinghandchalk.co.uk';
-      const shouldRedirect =
-        location.protocol !== 'https:' ||
-        location.hostname !== targetHost;
-
-      if (shouldRedirect) {
-        location.replace(
-          'https://' +
-          targetHost +
-          location.pathname +
-          location.search +
-          location.hash
-        );
-      }
+    if (!isLocal && location.protocol !== 'https:') {
+      location.replace(
+        'https://' +
+        location.host +
+        location.pathname +
+        location.search +
+        location.hash
+      );
     }
   </script>
 
@@ -389,7 +382,7 @@
             max-camera-orbit="auto 85deg 112%"
             field-of-view="16deg"
             scale="0.92 0.92 0.92"
-            interpolation-decay="180"
+            interpolation-decay="110"
             style="--poster-color: transparent;"
           >
             <div class="product-fallback" slot="poster">
@@ -538,16 +531,10 @@
       });
     });
 
-    viewer.addEventListener('pointerdown', (event) => {
+    viewer.addEventListener('pointerdown', () => {
       if (!booted) return;
       isDragging = true;
       viewer.autoRotate = false;
-
-      if (event.pointerId != null && viewer.setPointerCapture) {
-        try {
-          viewer.setPointerCapture(event.pointerId);
-        } catch (err) {}
-      }
     }, true);
 
     function finishDrag() {
@@ -558,7 +545,6 @@
 
     viewer.addEventListener('pointerup', finishDrag, true);
     viewer.addEventListener('pointercancel', finishDrag, true);
-    viewer.addEventListener('lostpointercapture', finishDrag, true);
     viewer.addEventListener('mouseup', finishDrag, true);
     viewer.addEventListener('touchend', finishDrag, true);
     window.addEventListener('pointerup', finishDrag, true);
