@@ -352,8 +352,9 @@
             auto-rotate-delay="0"
             rotation-per-second="3deg"
             camera-controls
+            interpolation-decay="120"
             interaction-prompt="none"
-            touch-action="pan-y"
+            touch-action="none"
             disable-zoom
             disable-pan
             exposure="1"
@@ -464,124 +465,91 @@
 
     const START_ORBIT = '-38deg 66deg 84%';
     const START_TARGET = '0m 0m 0m';
-    const IDLE_RETURN_DELAY = 1400;
-    const RETURN_DURATION = 1400;
+    const IDLE_RETURN_DELAY = 1200;
 
-    let idleTimer = null;
-    let returnFrame = null;
-    let isUserInteracting = false;
+    let resetTimer = null;
+    let interacting = false;
 
-    function parseOrbit(orbitString) {
-      const parts = orbitString.trim().split(/\s+/);
-      return {
-        theta: parseFloat(parts[0]),
-        phi: parseFloat(parts[1]),
-        radius: parseFloat(parts[2])
-      };
-    }
-
-    function formatOrbit(orbit) {
-      return `${orbit.theta}deg ${orbit.phi}deg ${orbit.radius}%`;
-    }
-
-    function easeInOutCubic(t) {
-      return t < 0.5
-        ? 4 * t * t * t
-        : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-
-    function shortestAngleDelta(from, to) {
-      let delta = to - from;
-      while (delta > 180) delta -= 360;
-      while (delta < -180) delta += 360;
-      return delta;
-    }
-
-    function cancelReturnAnimation() {
-      if (returnFrame) {
-        cancelAnimationFrame(returnFrame);
-        returnFrame = null;
+    function clearResetTimer() {
+      if (resetTimer) {
+        clearTimeout(resetTimer);
+        resetTimer = null;
       }
     }
 
-    function scheduleIdleReset() {
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => {
-        animateBackToStart();
+    function resetCameraSmoothly() {
+      clearResetTimer();
+      interacting = false;
+
+      viewer.autoRotate = false;
+      viewer.jumpCameraToGoal = false;
+      viewer.cameraTarget = START_TARGET;
+      viewer.cameraOrbit = START_ORBIT;
+
+      setTimeout(() => {
+        viewer.autoRotate = true;
+      }, 1400);
+    }
+
+    function scheduleReset() {
+      clearResetTimer();
+      resetTimer = setTimeout(() => {
+        resetCameraSmoothly();
       }, IDLE_RETURN_DELAY);
     }
 
-    function animateBackToStart() {
-      cancelReturnAnimation();
-
-      const startOrbit = parseOrbit(viewer.getCameraOrbit());
-      const endOrbit = parseOrbit(START_ORBIT);
-
-      const startTheta = startOrbit.theta;
-      const startPhi = startOrbit.phi;
-      const startRadius = startOrbit.radius;
-
-      const deltaTheta = shortestAngleDelta(startTheta, endOrbit.theta);
-      const deltaPhi = endOrbit.phi - startPhi;
-      const deltaRadius = endOrbit.radius - startRadius;
-
-      const startTime = performance.now();
-
-      function frame(now) {
-        const elapsed = now - startTime;
-        const t = Math.min(elapsed / RETURN_DURATION, 1);
-        const eased = easeInOutCubic(t);
-
-        const currentOrbit = {
-          theta: startTheta + deltaTheta * eased,
-          phi: startPhi + deltaPhi * eased,
-          radius: startRadius + deltaRadius * eased
-        };
-
-        viewer.cameraTarget = START_TARGET;
-        viewer.cameraOrbit = formatOrbit(currentOrbit);
-
-        if (t < 1) {
-          returnFrame = requestAnimationFrame(frame);
-        } else {
-          viewer.cameraTarget = START_TARGET;
-          viewer.cameraOrbit = START_ORBIT;
-          returnFrame = null;
-        }
-      }
-
-      returnFrame = requestAnimationFrame(frame);
-    }
-
-    function beginInteraction() {
-      isUserInteracting = true;
-      clearTimeout(idleTimer);
-      cancelReturnAnimation();
-    }
-
-    function endInteraction() {
-      isUserInteracting = false;
-      scheduleIdleReset();
-    }
-
     viewer.addEventListener('load', () => {
+      viewer.autoRotate = false;
+      viewer.jumpCameraToGoal = true;
       viewer.cameraTarget = START_TARGET;
       viewer.cameraOrbit = START_ORBIT;
+
+      requestAnimationFrame(() => {
+        viewer.jumpCameraToGoal = false;
+        viewer.autoRotate = true;
+      });
     });
 
-    viewer.addEventListener('pointerdown', beginInteraction);
-    viewer.addEventListener('touchstart', beginInteraction, { passive: true });
+    viewer.addEventListener('pointerdown', () => {
+      interacting = true;
+      clearResetTimer();
+      viewer.autoRotate = false;
+    });
 
     window.addEventListener('pointerup', () => {
-      if (isUserInteracting) endInteraction();
-    });
-
-    window.addEventListener('touchend', () => {
-      if (isUserInteracting) endInteraction();
+      if (interacting) {
+        scheduleReset();
+      }
     });
 
     window.addEventListener('pointercancel', () => {
-      if (isUserInteracting) endInteraction();
+      if (interacting) {
+        scheduleReset();
+      }
+    });
+
+    window.addEventListener('touchend', () => {
+      if (interacting) {
+        scheduleReset();
+      }
+    });
+
+    viewer.addEventListener('mouseup', () => {
+      if (interacting) {
+        scheduleReset();
+      }
+    });
+
+    viewer.addEventListener('touchend', () => {
+      if (interacting) {
+        scheduleReset();
+      }
+    });
+
+    viewer.addEventListener('mouseleave', () => {
+      if (interacting) {
+        scheduleReset();
+      }
     });
   </script>
 </body>
