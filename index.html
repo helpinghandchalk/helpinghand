@@ -366,6 +366,7 @@
             max-camera-orbit="auto 85deg 112%"
             field-of-view="16deg"
             scale="0.92 0.92 0.92"
+            interpolation-decay="120"
             style="--poster-color: transparent;"
           >
             <div class="product-fallback" slot="poster">
@@ -471,7 +472,7 @@
 
     function resetToStart() {
       viewer.autoRotate = false;
-      viewer.jumpCameraToGoal = true;
+      viewer.jumpCameraToGoal = false; // allow smooth motion
       viewer.scale = START_SCALE;
       viewer.cameraTarget = START_TARGET;
       viewer.cameraOrbit = START_ORBIT;
