@@ -361,11 +361,11 @@
             environment-image="neutral"
             environment-rotation="0deg 270deg 0deg"
             camera-target="0m 0m 0m"
-            camera-orbit="-38deg 66deg 200%"
-            min-camera-orbit="auto 20deg 200%"
-            max-camera-orbit="auto 85deg 200%"
+            camera-orbit="-38deg 66deg 112%"
+            min-camera-orbit="auto 20deg 112%"
+            max-camera-orbit="auto 85deg 112%"
             field-of-view="16deg"
-            scale="0.8 0.8 0.8"
+            scale="0.92 0.92 0.92"
             style="--poster-color: transparent;"
           >
             <div class="product-fallback" slot="poster">
@@ -463,25 +463,28 @@
 
     const viewer = document.getElementById('productViewer');
 
-    const START_ORBIT = '-38deg 66deg 84%';
+    const START_ORBIT = '-38deg 66deg 112%';
     const START_TARGET = '0m 0m 0m';
+    const START_SCALE = '0.92 0.92 0.92';
 
     let isInteracting = false;
 
     function hardResetToStartAndRestartOrbit() {
       viewer.autoRotate = false;
 
-      // Snap the camera back to the exact start pose.
       viewer.jumpCameraToGoal = true;
+      viewer.scale = START_SCALE;
       viewer.cameraTarget = START_TARGET;
       viewer.cameraOrbit = START_ORBIT;
 
-      // Reset model-viewer's internal auto-rotate turntable back to zero.
+      if (typeof viewer.updateFraming === 'function') {
+        viewer.updateFraming();
+      }
+
       if (typeof viewer.resetTurntableRotation === 'function') {
         viewer.resetTurntableRotation(0);
       }
 
-      // Let the snap apply, then resume autorotate from the beginning.
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           viewer.jumpCameraToGoal = false;
