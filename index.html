@@ -267,17 +267,21 @@
     <section class="center-stage" aria-label="Product">
       <div class="product-shell">
         <model-viewer
+          id="productViewer"
           src="product.glb"
           poster="product-poster.png"
           alt="Helping Hand chalk tray"
-          auto-rotate
-          auto-rotate-delay="0"
-          rotation-per-second="8deg"
           camera-controls
+          interaction-prompt="none"
           touch-action="pan-y"
+          disable-zoom
+          disable-pan
           exposure="1"
           shadow-intensity="0"
           environment-image="neutral"
+          camera-orbit="0deg 75deg auto"
+          min-camera-orbit="auto 65deg auto"
+          max-camera-orbit="auto 85deg auto"
           style="--poster-color: transparent;"
         >
           <div class="product-fallback" slot="poster">
@@ -371,6 +375,44 @@
         e.preventDefault();
       }
     });
+
+    const viewer = document.getElementById('productViewer');
+
+    let isUserInteracting = false;
+    let resumeIdleAt = 0;
+
+    const pauseIdleRotation = () => {
+      isUserInteracting = true;
+    };
+
+    const resumeIdleRotationSoon = () => {
+      isUserInteracting = false;
+      resumeIdleAt = performance.now() + 1400;
+    };
+
+    viewer.addEventListener('pointerdown', pauseIdleRotation);
+    viewer.addEventListener('pointerup', resumeIdleRotationSoon);
+    viewer.addEventListener('pointercancel', resumeIdleRotationSoon);
+    viewer.addEventListener('touchstart', pauseIdleRotation, { passive: true });
+    viewer.addEventListener('touchend', resumeIdleRotationSoon);
+    viewer.addEventListener('mouseup', resumeIdleRotationSoon);
+    viewer.addEventListener('mouseleave', resumeIdleRotationSoon);
+
+    function animateIdleOrbit(time) {
+      if (!isUserInteracting && time > resumeIdleAt) {
+        const seconds = time / 1000;
+
+        const baseRotation = (seconds * 4.8) % 360;
+        const drift = Math.sin(seconds * 0.42) * 3.2;
+        const theta = baseRotation + drift;
+
+        viewer.cameraOrbit = `${theta}deg 75deg auto`;
+      }
+
+      requestAnimationFrame(animateIdleOrbit);
+    }
+
+    requestAnimationFrame(animateIdleOrbit);
   </script>
 </body>
 </html>
