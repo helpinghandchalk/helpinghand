@@ -4,9 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Helping Hand</title>
+
   <style>
     :root {
-      --bg: #e9e8df;
+      --bg: #E5E5DB;
       --text: #161616;
       --muted: rgba(22, 22, 22, 0.72);
       --faint: rgba(22, 22, 22, 0.54);
@@ -14,11 +15,7 @@
 
     * {
       box-sizing: border-box;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
       user-select: none;
-      -webkit-touch-callout: none;
     }
 
     html, body {
@@ -30,491 +27,160 @@
     }
 
     body {
-      min-height: 100vh;
       overflow-x: hidden;
-    }
-
-    .overlay {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    .overlay-light {
-      background:
-        radial-gradient(circle at 50% 38%, rgba(255,255,255,0.06), transparent 42%),
-        radial-gradient(circle at 50% 55%, rgba(0,0,0,0.035), transparent 72%);
-      mix-blend-mode: soft-light;
-    }
-
-    .overlay-grain {
-      opacity: 0.045;
-      background-image:
-        repeating-radial-gradient(circle at 0 0, transparent 0, rgba(0,0,0,0.2) 1px, transparent 2px),
-        repeating-radial-gradient(circle at 100% 100%, transparent 0, rgba(255,255,255,0.15) 1px, transparent 2px);
-      background-size: 180px 180px;
-      mix-blend-mode: multiply;
     }
 
     .page {
       min-height: 100vh;
       display: grid;
-      grid-template-columns: minmax(120px, 1fr) minmax(360px, 760px) minmax(120px, 1fr);
+      grid-template-columns: 1fr minmax(360px, 760px) 1fr;
       grid-template-rows: auto 1fr auto;
-      gap: 2rem;
-      padding: 2.5rem 3.5rem 2rem;
-      align-items: start;
-      position: relative;
-      overflow: visible;
+      padding: 2.5rem 3.5rem;
     }
 
     .logo-wrap {
       grid-column: 2;
       justify-self: center;
-      margin-top: 0.5rem;
-      position: relative;
-      z-index: 2;
-    }
-
-    .logo-wrap img {
-      display: block;
-      width: min(33vw, 500px);
-      max-width: 100%;
-      height: auto;
-      pointer-events: none;
-      -webkit-user-drag: none;
-    }
-
-    .left-copy,
-    .right-copy {
-      align-self: center;
-      font-size: clamp(1.05rem, 1.2vw, 1.35rem);
-      line-height: 1.35;
-      letter-spacing: -0.02em;
-      position: relative;
-      z-index: 2;
     }
 
     .left-copy {
       grid-column: 1;
-      grid-row: 2;
-      justify-self: start;
-      margin-left: 2.5rem;
+      align-self: center;
+      margin-left: 2rem;
     }
 
     .right-copy {
       grid-column: 3;
-      grid-row: 2;
-      justify-self: end;
-      margin-right: 2.5rem;
-      color: var(--muted);
-      text-align: left;
-    }
-
-    .left-copy p,
-    .right-copy p {
-      margin: 0 0 1rem;
-    }
-
-    .left-copy p:last-child,
-    .right-copy p:last-child {
-      margin-bottom: 0;
-    }
-
-    .care-line {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      white-space: nowrap;
-    }
-
-    .care-line .typed {
-      font-size: inherit;
-    }
-
-    .care-mark {
-      display: inline-block;
-      height: 2.9rem;
-      width: auto;
-      object-fit: contain;
-      transform: rotate(-2deg) translateY(0.04em);
-      pointer-events: none;
-      -webkit-user-drag: none;
+      align-self: center;
+      margin-right: 2rem;
     }
 
     .center-stage {
       grid-column: 2;
-      grid-row: 2;
       display: grid;
       justify-items: center;
-      align-content: center;
-      gap: 1.4rem;
-      min-height: 100%;
-      position: relative;
-      overflow: visible;
-      z-index: 10;
-    }
-
-    .product-shell {
-      width: min(100%, 560px);
-      display: grid;
-      justify-items: center;
-      gap: 1rem;
-      position: relative;
-      overflow: visible;
-      z-index: 10;
     }
 
     .product-stage {
-      position: relative;
       width: 560px;
       height: 620px;
-      overflow: visible;
-      z-index: 20;
-      pointer-events: none;
+      position: relative;
     }
 
-    .product-stage model-viewer,
-    .product-fallback {
+    model-viewer {
+      width: 980px;
+      height: 820px;
       position: absolute;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      width: 980px;
-      height: 820px;
-      background: transparent;
-      display: block;
-      overflow: visible;
     }
 
-    model-viewer {
-      position: relative;
-      z-index: 30;
-      pointer-events: auto;
-    }
-
-    .product-fallback img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      pointer-events: none;
-      -webkit-user-drag: none;
-    }
-
-    .price {
-      align-self: start;
-      justify-self: start;
-      margin-left: 3.2rem;
-      user-select: none;
-      position: relative;
-      z-index: 4;
-      margin-top: -1.25rem;
-    }
-
-    .price img {
-      display: block;
-      width: clamp(3.2rem, 5vw, 5.2rem);
-      height: auto;
-      object-fit: contain;
-      transform: rotate(-5deg);
-      pointer-events: none;
-      -webkit-user-drag: none;
-    }
-
-    .legal {
-      text-align: justify;
-      width: min(100%, 520px);
-      color: var(--faint);
-      font-size: 0.78rem;
-      line-height: 1.28;
-      letter-spacing: 0.01em;
-      text-transform: uppercase;
-      margin-top: 0.25rem;
-      position: relative;
-      z-index: 3;
-    }
-
-    .legal p {
-      margin: 0;
-    }
-
-    a,
-    .search-link,
-    .email-link {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    a:hover,
-    .search-link:hover,
-    .email-link:hover {
-      text-decoration: underline;
-      text-underline-offset: 0.12em;
-    }
-
-    .search-link,
-    .email-link {
-      cursor: pointer;
-    }
-
-    @media (max-width: 1100px) {
-      .page {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto auto auto;
-        padding: 2rem 1.25rem 1.5rem;
-        gap: 1.5rem;
-      }
-
-      .logo-wrap,
-      .left-copy,
-      .center-stage,
-      .right-copy {
-        grid-column: 1;
-        justify-self: center;
-        margin: 0;
-      }
-
-      .logo-wrap {
-        grid-row: 1;
-      }
-
-      .left-copy {
-        grid-row: 2;
-        width: min(100%, 420px);
-      }
-
-      .center-stage {
-        grid-row: 3;
-        width: 100%;
-      }
-
-      .right-copy {
-        grid-row: 4;
-        width: min(100%, 420px);
-      }
-
-      .logo-wrap img {
-        width: min(72vw, 430px);
-      }
-
-      .price {
-        margin-left: 1.2rem;
-        margin-top: -0.5rem;
-      }
-
-      .legal {
-        font-size: 0.72rem;
-      }
-
-      .product-stage {
-        width: min(100%, 560px);
-        height: min(58vh, 620px);
-      }
-
-      .product-stage model-viewer,
-      .product-fallback {
-        width: min(140vw, 760px);
-        height: min(56vh, 580px);
-      }
-    }
   </style>
+
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
+
 <body>
-  <div class="overlay overlay-light"></div>
-  <div class="overlay overlay-grain"></div>
 
-  <main class="page">
-    <div class="logo-wrap">
-      <img src="logo.png" alt="Helping Hand Gotu Kola Chalk" draggable="false" />
+<main class="page">
+
+  <div class="logo-wrap">
+    <img src="logo.png" />
+  </div>
+
+  <div class="left-copy">
+    <p>Chalk. CARE.</p>
+    <p>From my hands to yours.</p>
+    <p>~ Osh</p>
+  </div>
+
+  <div class="center-stage">
+    <div class="product-stage">
+
+      <model-viewer
+        id="productViewer"
+        src="product.glb"
+        auto-rotate
+        auto-rotate-delay="0"
+        rotation-per-second="3deg"
+        camera-controls
+        touch-action="none"
+        disable-zoom
+        disable-pan
+        environment-image="neutral"
+        camera-target="0m 0m 0m"
+        camera-orbit="-38deg 66deg 112%"
+        min-camera-orbit="auto 20deg 112%"
+        max-camera-orbit="auto 85deg 112%"
+        field-of-view="16deg"
+        scale="0.92 0.92 0.92"
+      >
+      </model-viewer>
+
     </div>
+  </div>
 
-    <section class="left-copy" aria-label="Brand note">
-      <p class="care-line">
-        <span class="typed">Chalk.</span>
-        <img class="care-mark" src="CARE.png" alt="CARE." draggable="false" />
-      </p>
-      <p>From my hands to yours.</p>
-      <p>~ Osh</p>
-    </section>
+  <div class="right-copy">
+    osh@helpinghandchalk.co.uk
+  </div>
 
-    <section class="center-stage" aria-label="Product">
-      <div class="product-shell">
-        <div class="product-stage">
-          <model-viewer
-            id="productViewer"
-            src="product.glb"
-            poster="product-poster.png"
-            alt="Helping Hand chalk tray"
-            auto-rotate
-            auto-rotate-delay="0"
-            rotation-per-second="3deg"
-            camera-controls
-            interaction-prompt="none"
-            touch-action="none"
-            disable-zoom
-            disable-pan
-            exposure="1"
-            shadow-intensity="0"
-            environment-image="neutral"
-            environment-rotation="0deg 270deg 0deg"
-            camera-target="0m 0m 0m"
-            camera-orbit="-38deg 66deg 112%"
-            min-camera-orbit="auto 20deg 112%"
-            max-camera-orbit="auto 85deg 112%"
-            field-of-view="16deg"
-            scale="0.92 0.92 0.92"
-            style="--poster-color: transparent;"
-          >
-            <div class="product-fallback" slot="poster">
-              <img src="product-poster.png" alt="Helping Hand chalk tray" draggable="false" />
-            </div>
-          </model-viewer>
-        </div>
+</main>
 
-        <div class="price" aria-label="Price">
-          <img src="£12.png" alt="£12" draggable="false" />
-        </div>
+<script>
+const viewer = document.getElementById('productViewer');
 
-        <div class="legal">
-          <p>
-            Net wt. 70 grams. Ingredients : Magnesium Carbonate,
-            <span
-              class="search-link"
-              role="link"
-              tabindex="0"
-              aria-label="Search for Gotu Kola Leaf"
-              onclick="searchTerm('Gotu Kola Leaf')"
-              onkeydown="handleSearchKey(event, 'Gotu Kola Leaf')"
-            >Gotu Kola Leaf</span>
-            Powder.
-            Apply a small amount to hands as needed to improve grip during climbing or training. Do
-            not ingest. Do not inhale. Avoid contact with eyes. Keep out of reach of children. Use
-            within 3 months of opening for best performance. Keep sealed when not in use. Store in a
-            cool, dry place. Keep away from moisture. Discontinue use if irritation occurs. © 2026
-            Helping Hand Chalk. All rights reserved.
-          </p>
-        </div>
-      </div>
-    </section>
+const START_ORBIT = '-38deg 66deg 112%';
+const START_TARGET = '0m 0m 0m';
 
-    <aside class="right-copy" aria-label="Contact">
-      <p>
-        <span
-          class="email-link"
-          role="link"
-          tabindex="0"
-          aria-label="Email osh@helpinghandchalk.co.uk"
-          onclick="openEmail()"
-          onkeydown="handleEmailKey(event)"
-        >osh@helpinghandchalk.co.uk</span>
-      </p>
-    </aside>
-  </main>
+let interacting = false;
 
-  <script>
-    function searchTerm(term) {
-      const url = 'https://www.google.com/search?q=' + encodeURIComponent(term);
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
+/* ---------- RESET FUNCTION (FIXED) ---------- */
+function resetToStart() {
+  viewer.autoRotate = false;
 
-    function handleSearchKey(event, term) {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        searchTerm(term);
-      }
-    }
+  // force exact starting pose
+  viewer.jumpCameraToGoal = true;
+  viewer.cameraTarget = START_TARGET;
+  viewer.cameraOrbit = START_ORBIT;
 
-    function openEmail() {
-      window.location.href = 'mailto:osh@helpinghandchalk.co.uk';
-    }
+  // reset internal orbit rotation (THIS is what was missing before)
+  if (viewer.resetTurntableRotation) {
+    viewer.resetTurntableRotation(0);
+  }
 
-    function handleEmailKey(event) {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        openEmail();
-      }
-    }
+  requestAnimationFrame(() => {
+    viewer.jumpCameraToGoal = false;
+    viewer.autoRotate = true;
+  });
+}
 
-    document.addEventListener('copy', (e) => e.preventDefault());
-    document.addEventListener('cut', (e) => e.preventDefault());
-    document.addEventListener('paste', (e) => e.preventDefault());
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
-    document.addEventListener('dragstart', (e) => e.preventDefault());
-    document.addEventListener('selectstart', (e) => e.preventDefault());
+/* ---------- LOAD ---------- */
+viewer.addEventListener('load', () => {
+  resetToStart();
+});
 
-    document.addEventListener('keydown', (e) => {
-      const key = e.key.toLowerCase();
+/* ---------- INTERACTION ---------- */
+viewer.addEventListener('pointerdown', () => {
+  interacting = true;
+  viewer.autoRotate = false;
+});
 
-      if ((e.ctrlKey || e.metaKey) && ['a', 'c', 'x', 'v', 's', 'u', 'p'].includes(key)) {
-        e.preventDefault();
-      }
+/* ---------- RELEASE ---------- */
+function endInteraction() {
+  if (!interacting) return;
+  interacting = false;
+  resetToStart();
+}
 
-      if (key === 'f12') {
-        e.preventDefault();
-      }
+window.addEventListener('pointerup', endInteraction);
+window.addEventListener('pointercancel', endInteraction);
+window.addEventListener('touchend', endInteraction);
+window.addEventListener('touchcancel', endInteraction);
+viewer.addEventListener('mouseup', endInteraction);
+viewer.addEventListener('mouseleave', endInteraction);
 
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i', 'j', 'c'].includes(key)) {
-        e.preventDefault();
-      }
-    });
+</script>
 
-    const viewer = document.getElementById('productViewer');
-
-    const START_ORBIT = '-38deg 66deg 112%';
-    const START_TARGET = '0m 0m 0m';
-    const START_SCALE = '0.92 0.92 0.92';
-
-    let isInteracting = false;
-
-    function hardResetToStartAndRestartOrbit() {
-      viewer.autoRotate = false;
-
-      viewer.jumpCameraToGoal = true;
-      viewer.scale = START_SCALE;
-      viewer.cameraTarget = START_TARGET;
-      viewer.cameraOrbit = START_ORBIT;
-
-      if (typeof viewer.updateFraming === 'function') {
-        viewer.updateFraming();
-      }
-
-      if (typeof viewer.resetTurntableRotation === 'function') {
-        viewer.resetTurntableRotation(0);
-      }
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          viewer.jumpCameraToGoal = false;
-          viewer.autoRotate = true;
-        });
-      });
-    }
-
-    viewer.addEventListener('load', () => {
-      hardResetToStartAndRestartOrbit();
-    });
-
-    viewer.addEventListener('pointerdown', () => {
-      isInteracting = true;
-      viewer.autoRotate = false;
-    });
-
-    function endInteraction() {
-      if (!isInteracting) return;
-      isInteracting = false;
-      hardResetToStartAndRestartOrbit();
-    }
-
-    window.addEventListener('pointerup', endInteraction);
-    window.addEventListener('pointercancel', endInteraction);
-    window.addEventListener('touchend', endInteraction);
-    window.addEventListener('touchcancel', endInteraction);
-    viewer.addEventListener('mouseup', endInteraction);
-    viewer.addEventListener('touchend', endInteraction);
-    viewer.addEventListener('touchcancel', endInteraction);
-  </script>
 </body>
 </html>
