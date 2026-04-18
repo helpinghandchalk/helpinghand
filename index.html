@@ -133,7 +133,7 @@
     .product-shell model-viewer,
     .product-fallback {
       width: min(100%, 520px);
-      aspect-ratio: 1 / 0.88;
+      height: min(62vh, 560px);
       background: transparent;
       display: block;
     }
@@ -245,6 +245,11 @@
       .legal {
         font-size: 0.72rem;
       }
+
+      .product-shell model-viewer,
+      .product-fallback {
+        height: min(54vh, 480px);
+      }
     }
   </style>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
@@ -271,6 +276,9 @@
           src="product.glb"
           poster="product-poster.png"
           alt="Helping Hand chalk tray"
+          auto-rotate
+          auto-rotate-delay="0"
+          rotation-per-second="3deg"
           camera-controls
           interaction-prompt="none"
           touch-action="pan-y"
@@ -279,9 +287,11 @@
           exposure="1"
           shadow-intensity="0"
           environment-image="neutral"
-          camera-orbit="0deg 75deg auto"
-          min-camera-orbit="auto 65deg auto"
-          max-camera-orbit="auto 85deg auto"
+          camera-target="0m 0m 0m"
+          camera-orbit="0deg 35deg 70%"
+          min-camera-orbit="auto 0deg 70%"
+          max-camera-orbit="auto 85deg 70%"
+          field-of-view="18deg"
           style="--poster-color: transparent;"
         >
           <div class="product-fallback" slot="poster">
@@ -375,44 +385,6 @@
         e.preventDefault();
       }
     });
-
-    const viewer = document.getElementById('productViewer');
-
-    let isUserInteracting = false;
-    let resumeIdleAt = 0;
-
-    const pauseIdleRotation = () => {
-      isUserInteracting = true;
-    };
-
-    const resumeIdleRotationSoon = () => {
-      isUserInteracting = false;
-      resumeIdleAt = performance.now() + 1400;
-    };
-
-    viewer.addEventListener('pointerdown', pauseIdleRotation);
-    viewer.addEventListener('pointerup', resumeIdleRotationSoon);
-    viewer.addEventListener('pointercancel', resumeIdleRotationSoon);
-    viewer.addEventListener('touchstart', pauseIdleRotation, { passive: true });
-    viewer.addEventListener('touchend', resumeIdleRotationSoon);
-    viewer.addEventListener('mouseup', resumeIdleRotationSoon);
-    viewer.addEventListener('mouseleave', resumeIdleRotationSoon);
-
-    function animateIdleOrbit(time) {
-      if (!isUserInteracting && time > resumeIdleAt) {
-        const seconds = time / 1000;
-
-        const baseRotation = (seconds * 4.8) % 360;
-        const drift = Math.sin(seconds * 0.42) * 3.2;
-        const theta = baseRotation + drift;
-
-        viewer.cameraOrbit = `${theta}deg 75deg auto`;
-      }
-
-      requestAnimationFrame(animateIdleOrbit);
-    }
-
-    requestAnimationFrame(animateIdleOrbit);
   </script>
 </body>
 </html>
