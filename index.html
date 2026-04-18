@@ -34,6 +34,30 @@
       overflow-x: hidden;
     }
 
+    /* minimal overlay only */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .overlay-light {
+      background:
+        radial-gradient(circle at 50% 38%, rgba(255,255,255,0.06), transparent 42%),
+        radial-gradient(circle at 50% 55%, rgba(0,0,0,0.035), transparent 72%);
+      mix-blend-mode: soft-light;
+    }
+
+    .overlay-grain {
+      opacity: 0.045;
+      background-image:
+        repeating-radial-gradient(circle at 0 0, transparent 0, rgba(0,0,0,0.2) 1px, transparent 2px),
+        repeating-radial-gradient(circle at 100% 100%, transparent 0, rgba(255,255,255,0.15) 1px, transparent 2px);
+      background-size: 180px 180px;
+      mix-blend-mode: multiply;
+    }
+
     .page {
       min-height: 100vh;
       display: grid;
@@ -143,7 +167,6 @@
       z-index: 10;
     }
 
-    /* original layout preserved, only product render area expanded */
     .product-stage {
       position: relative;
       width: 560px;
@@ -301,6 +324,9 @@
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
+  <div class="overlay overlay-light"></div>
+  <div class="overlay overlay-grain"></div>
+
   <main class="page">
     <div class="logo-wrap">
       <img src="logo.png" alt="Helping Hand Gotu Kola Chalk" draggable="false" />
@@ -331,10 +357,9 @@
             touch-action="pan-y"
             disable-zoom
             disable-pan
-            exposure="1.4"
+            exposure="1"
             shadow-intensity="0"
-            environment-image="env.hdr"
-            tone-mapping="neutral"
+            environment-image="neutral"
             camera-target="0m 0m 0m"
             camera-orbit="0deg 35deg 96%"
             min-camera-orbit="auto 0deg 96%"
