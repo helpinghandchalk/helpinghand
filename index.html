@@ -34,7 +34,6 @@
       overflow-x: hidden;
     }
 
-    /* minimal overlay only */
     .overlay {
       position: fixed;
       inset: 0;
@@ -362,10 +361,10 @@
             environment-image="neutral"
             environment-rotation="0deg 270deg 0deg"
             camera-target="0m 0m 0m"
-            camera-orbit="0deg 35deg 96%"
-            min-camera-orbit="auto 0deg 96%"
-            max-camera-orbit="auto 85deg 96%"
-            field-of-view="18deg"
+            camera-orbit="-38deg 66deg 84%"
+            min-camera-orbit="auto 20deg 84%"
+            max-camera-orbit="auto 85deg 84%"
+            field-of-view="16deg"
             style="--poster-color: transparent;"
           >
             <div class="product-fallback" slot="poster">
@@ -459,6 +458,130 @@
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i', 'j', 'c'].includes(key)) {
         e.preventDefault();
       }
+    });
+
+    const viewer = document.getElementById('productViewer');
+
+    const START_ORBIT = '-38deg 66deg 84%';
+    const START_TARGET = '0m 0m 0m';
+    const IDLE_RETURN_DELAY = 1400;
+    const RETURN_DURATION = 1400;
+
+    let idleTimer = null;
+    let returnFrame = null;
+    let isUserInteracting = false;
+
+    function parseOrbit(orbitString) {
+      const parts = orbitString.trim().split(/\s+/);
+      return {
+        theta: parseFloat(parts[0]),
+        phi: parseFloat(parts[1]),
+        radius: parseFloat(parts[2])
+      };
+    }
+
+    function formatOrbit(orbit) {
+      return `${orbit.theta}deg ${orbit.phi}deg ${orbit.radius}%`;
+    }
+
+    function easeInOutCubic(t) {
+      return t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function shortestAngleDelta(from, to) {
+      let delta = to - from;
+      while (delta > 180) delta -= 360;
+      while (delta < -180) delta += 360;
+      return delta;
+    }
+
+    function cancelReturnAnimation() {
+      if (returnFrame) {
+        cancelAnimationFrame(returnFrame);
+        returnFrame = null;
+      }
+    }
+
+    function scheduleIdleReset() {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        animateBackToStart();
+      }, IDLE_RETURN_DELAY);
+    }
+
+    function animateBackToStart() {
+      cancelReturnAnimation();
+
+      const startOrbit = parseOrbit(viewer.getCameraOrbit());
+      const endOrbit = parseOrbit(START_ORBIT);
+
+      const startTheta = startOrbit.theta;
+      const startPhi = startOrbit.phi;
+      const startRadius = startOrbit.radius;
+
+      const deltaTheta = shortestAngleDelta(startTheta, endOrbit.theta);
+      const deltaPhi = endOrbit.phi - startPhi;
+      const deltaRadius = endOrbit.radius - startRadius;
+
+      const startTime = performance.now();
+
+      function frame(now) {
+        const elapsed = now - startTime;
+        const t = Math.min(elapsed / RETURN_DURATION, 1);
+        const eased = easeInOutCubic(t);
+
+        const currentOrbit = {
+          theta: startTheta + deltaTheta * eased,
+          phi: startPhi + deltaPhi * eased,
+          radius: startRadius + deltaRadius * eased
+        };
+
+        viewer.cameraTarget = START_TARGET;
+        viewer.cameraOrbit = formatOrbit(currentOrbit);
+
+        if (t < 1) {
+          returnFrame = requestAnimationFrame(frame);
+        } else {
+          viewer.cameraTarget = START_TARGET;
+          viewer.cameraOrbit = START_ORBIT;
+          returnFrame = null;
+        }
+      }
+
+      returnFrame = requestAnimationFrame(frame);
+    }
+
+    function beginInteraction() {
+      isUserInteracting = true;
+      clearTimeout(idleTimer);
+      cancelReturnAnimation();
+    }
+
+    function endInteraction() {
+      isUserInteracting = false;
+      scheduleIdleReset();
+    }
+
+    viewer.addEventListener('load', () => {
+      viewer.cameraTarget = START_TARGET;
+      viewer.cameraOrbit = START_ORBIT;
+    });
+
+    viewer.addEventListener('pointerdown', beginInteraction);
+    viewer.addEventListener('touchstart', beginInteraction, { passive: true });
+
+    window.addEventListener('pointerup', () => {
+      if (isUserInteracting) endInteraction();
+    });
+
+    window.addEventListener('touchend', () => {
+      if (isUserInteracting) endInteraction();
+    });
+
+    window.addEventListener('pointercancel', () => {
+      if (isUserInteracting) endInteraction();
     });
   </script>
 </body>
