@@ -467,49 +467,69 @@
     const START_ORBIT = '-38deg 66deg 112%';
     const START_TARGET = '0m 0m 0m';
     const START_SCALE = '0.92 0.92 0.92';
+    const RETURN_DELAY = 120;
 
-    let interacting = false;
     let hasInitialized = false;
+    let resetTimer = null;
+    let isResetting = false;
 
-    function hardSetStartState() {
+    function clearResetTimer() {
+      if (resetTimer) {
+        clearTimeout(resetTimer);
+        resetTimer = null;
+      }
+    }
+
+    function applyStartImmediately() {
       viewer.autoRotate = false;
       viewer.jumpCameraToGoal = true;
       viewer.scale = START_SCALE;
       viewer.cameraTarget = START_TARGET;
       viewer.cameraOrbit = START_ORBIT;
 
-      if (viewer.resetTurntableRotation) {
+      if (typeof viewer.resetTurntableRotation === 'function') {
         viewer.resetTurntableRotation(0);
       }
     }
 
-    function resetToStart() {
+    function resetToStartSmoothly() {
+      if (!hasInitialized || isResetting) return;
+
+      isResetting = true;
       viewer.autoRotate = false;
       viewer.jumpCameraToGoal = false;
       viewer.scale = START_SCALE;
       viewer.cameraTarget = START_TARGET;
       viewer.cameraOrbit = START_ORBIT;
 
-      if (viewer.resetTurntableRotation) {
+      if (typeof viewer.resetTurntableRotation === 'function') {
         viewer.resetTurntableRotation(0);
       }
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          viewer.jumpCameraToGoal = false;
           viewer.autoRotate = true;
+          isResetting = false;
         });
       });
+    }
+
+    function scheduleReset() {
+      if (!hasInitialized) return;
+      clearResetTimer();
+      resetTimer = setTimeout(() => {
+        resetToStartSmoothly();
+      }, RETURN_DELAY);
     }
 
     viewer.addEventListener('load', () => {
       viewer.scale = START_SCALE;
 
-      if (viewer.updateFraming) {
+      if (typeof viewer.updateFraming === 'function') {
         viewer.updateFraming();
       }
 
-      hardSetStartState();
+      applyStartImmediately();
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -522,24 +542,28 @@
 
     viewer.addEventListener('pointerdown', () => {
       if (!hasInitialized) return;
-      interacting = true;
+      clearResetTimer();
+      isResetting = false;
       viewer.autoRotate = false;
+    }, true);
+
+    viewer.addEventListener('camera-change', (event) => {
+      if (!hasInitialized) return;
+
+      const source = event.detail && event.detail.source;
+
+      if (source === 'user-interaction') {
+        clearResetTimer();
+        viewer.autoRotate = false;
+        isResetting = false;
+        scheduleReset();
+      }
     });
 
-    function endInteraction() {
-      if (!hasInitialized || !interacting) return;
-      interacting = false;
-      resetToStart();
-    }
-
-    window.addEventListener('pointerup', endInteraction);
-    window.addEventListener('pointercancel', endInteraction);
-    window.addEventListener('touchend', endInteraction);
-    window.addEventListener('touchcancel', endInteraction);
-    viewer.addEventListener('mouseup', endInteraction);
-    viewer.addEventListener('touchend', endInteraction);
-    viewer.addEventListener('touchcancel', endInteraction);
-    viewer.addEventListener('mouseleave', endInteraction);
+    window.addEventListener('blur', () => {
+      if (!hasInitialized) return;
+      scheduleReset();
+    });
   </script>
 </body>
 </html>
