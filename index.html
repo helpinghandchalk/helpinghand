@@ -465,18 +465,22 @@
     const START_ORBIT = '-38deg 66deg 84%';
     const START_TARGET = '0m 0m 0m';
 
-    let isDragging = false;
+    let isInteracting = false;
 
-    function applyStartPose(instant = false) {
+    function hardResetToStartAndRestartOrbit() {
       viewer.autoRotate = false;
-      viewer.jumpCameraToGoal = instant;
+
+      // Snap the camera back to the exact start pose.
+      viewer.jumpCameraToGoal = true;
       viewer.cameraTarget = START_TARGET;
       viewer.cameraOrbit = START_ORBIT;
-    }
 
-    function restartOrbitFromStart() {
-      applyStartPose(true);
+      // Reset model-viewer's internal auto-rotate turntable back to zero.
+      if (typeof viewer.resetTurntableRotation === 'function') {
+        viewer.resetTurntableRotation(0);
+      }
 
+      // Let the snap apply, then resume autorotate from the beginning.
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           viewer.jumpCameraToGoal = false;
@@ -486,28 +490,27 @@
     }
 
     viewer.addEventListener('load', () => {
-      restartOrbitFromStart();
+      hardResetToStartAndRestartOrbit();
     });
 
     viewer.addEventListener('pointerdown', () => {
-      isDragging = true;
+      isInteracting = true;
       viewer.autoRotate = false;
     });
 
-    function onRelease() {
-      if (!isDragging) return;
-      isDragging = false;
-      restartOrbitFromStart();
+    function endInteraction() {
+      if (!isInteracting) return;
+      isInteracting = false;
+      hardResetToStartAndRestartOrbit();
     }
 
-    window.addEventListener('pointerup', onRelease);
-    window.addEventListener('pointercancel', onRelease);
-    window.addEventListener('mouseup', onRelease);
-    window.addEventListener('touchend', onRelease);
-    window.addEventListener('touchcancel', onRelease);
-    viewer.addEventListener('mouseup', onRelease);
-    viewer.addEventListener('touchend', onRelease);
-    viewer.addEventListener('touchcancel', onRelease);
+    window.addEventListener('pointerup', endInteraction);
+    window.addEventListener('pointercancel', endInteraction);
+    window.addEventListener('touchend', endInteraction);
+    window.addEventListener('touchcancel', endInteraction);
+    viewer.addEventListener('mouseup', endInteraction);
+    viewer.addEventListener('touchend', endInteraction);
+    viewer.addEventListener('touchcancel', endInteraction);
   </script>
 </body>
 </html>
