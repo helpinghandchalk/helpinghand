@@ -484,11 +484,36 @@
     const START_TARGET = '0m 0m 0m';
     const START_SCALE = '0.92 0.92 0.92';
 
-    let isDragging = false;
+    let isPointerDown = false;
+    let isReturning = false;
     let booted = false;
+    let settleTimer = null;
+    let returnSafetyTimer = null;
+
+    function clearSettleTimer() {
+      if (settleTimer) {
+        clearTimeout(settleTimer);
+        settleTimer = null;
+      }
+    }
+
+    function clearReturnSafetyTimer() {
+      if (returnSafetyTimer) {
+        clearTimeout(returnSafetyTimer);
+        returnSafetyTimer = null;
+      }
+    }
+
+    function stopRotationCompletely() {
+      viewer.autoRotate = false;
+
+      if (typeof viewer.resetTurntableRotation === 'function') {
+        viewer.resetTurntableRotation(0);
+      }
+    }
 
     function hardSetStartPose() {
-      viewer.autoRotate = false;
+      stopRotationCompletely();
       viewer.jumpCameraToGoal = true;
       viewer.scale = START_SCALE;
       viewer.cameraTarget = START_TARGET;
@@ -503,8 +528,15 @@
       }
     }
 
-    function springBackNow() {
-      viewer.autoRotate = false;
+    function beginSpringBack() {
+      clearSettleTimer();
+      clearReturnSafetyTimer();
+
+      isReturning = true;
+
+      stopRotationCompletely();
+
+      viewer.cameraControls = false;
       viewer.jumpCameraToGoal = false;
       viewer.scale = START_SCALE;
       viewer.cameraTarget = START_TARGET;
@@ -514,7 +546,30 @@
         viewer.resetTurntableRotation(0);
       }
 
+      returnSafetyTimer = setTimeout(() => {
+        if (!isReturning || isPointerDown) return;
+        finishSpringBackAndResume();
+      }, 900);
+    }
+
+    function finishSpringBackAndResume() {
+      clearSettleTimer();
+      clearReturnSafetyTimer();
+
+      isReturning = false;
+
+      viewer.jumpCameraToGoal = true;
+      viewer.scale = START_SCALE;
+      viewer.cameraTarget = START_TARGET;
+      viewer.cameraOrbit = START_ORBIT;
+
+      if (typeof viewer.resetTurntableRotation === 'function') {
+        viewer.resetTurntableRotation(0);
+      }
+
       requestAnimationFrame(() => {
+        viewer.jumpCameraToGoal = false;
+        viewer.cameraControls = true;
         viewer.autoRotate = true;
       });
     }
@@ -525,6 +580,7 @@
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           viewer.jumpCameraToGoal = false;
+          viewer.cameraControls = true;
           viewer.autoRotate = true;
           booted = true;
         });
@@ -533,25 +589,40 @@
 
     viewer.addEventListener('pointerdown', () => {
       if (!booted) return;
-      isDragging = true;
-      viewer.autoRotate = false;
+
+      isPointerDown = true;
+      isReturning = false;
+
+      clearSettleTimer();
+      clearReturnSafetyTimer();
+
+      viewer.cameraControls = true;
+      stopRotationCompletely();
     }, true);
 
-    function finishDrag() {
-      if (!booted || !isDragging) return;
-      isDragging = false;
-      springBackNow();
+    function releasePointer() {
+      if (!booted || !isPointerDown) return;
+
+      isPointerDown = false;
+      beginSpringBack();
     }
 
-    viewer.addEventListener('pointerup', finishDrag, true);
-    viewer.addEventListener('pointercancel', finishDrag, true);
-    viewer.addEventListener('mouseup', finishDrag, true);
-    viewer.addEventListener('touchend', finishDrag, true);
-    window.addEventListener('pointerup', finishDrag, true);
-    window.addEventListener('pointercancel', finishDrag, true);
-    window.addEventListener('mouseup', finishDrag, true);
-    window.addEventListener('touchend', finishDrag, true);
-    window.addEventListener('blur', finishDrag, true);
+    viewer.addEventListener('pointerup', releasePointer, true);
+    viewer.addEventListener('pointercancel', releasePointer, true);
+    window.addEventListener('pointerup', releasePointer, true);
+    window.addEventListener('pointercancel', releasePointer, true);
+    window.addEventListener('blur', releasePointer, true);
+
+    viewer.addEventListener('camera-change', () => {
+      if (!booted || !isReturning || isPointerDown) return;
+
+      clearSettleTimer();
+
+      settleTimer = setTimeout(() => {
+        if (!isReturning || isPointerDown) return;
+        finishSpringBackAndResume();
+      }, 120);
+    });
   </script>
 </body>
 </html>
