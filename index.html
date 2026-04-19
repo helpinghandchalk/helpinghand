@@ -29,6 +29,7 @@
       --text: #161616;
       --muted: rgba(22, 22, 22, 0.72);
       --faint: rgba(22, 22, 22, 0.54);
+      --legal-width: 520px;
     }
 
     * {
@@ -267,7 +268,7 @@
       text-align: justify;
       text-align-last: justify;
       text-justify: inter-word;
-      width: min(100%, 520px);
+      width: min(100%, var(--legal-width));
       color: var(--faint);
       font-size: 0.78rem;
       line-height: 1.28;
@@ -330,7 +331,6 @@
       .center-stage,
       .right-copy {
         grid-column: 1;
-        justify-self: stretch;
         margin: 0;
         width: 100%;
       }
@@ -381,9 +381,10 @@
       .price {
         grid-area: product;
         position: relative;
-        justify-self: end;
+        justify-self: start;
         align-self: end;
-        right: 0.65rem;
+        left: calc((100% - min(100%, var(--legal-width))) / 2);
+        right: auto;
         bottom: 0.35rem;
         top: auto;
         margin: 0;
@@ -397,12 +398,13 @@
 
       .left-copy {
         grid-area: copy;
-        width: 100%;
-        max-width: none;
+        width: min(100%, var(--legal-width));
+        justify-self: center;
         margin-top: 0.15rem;
-        padding: 0 0.35rem;
+        padding: 0;
         font-size: clamp(1rem, 5vw, 1.45rem);
         line-height: 1.28;
+        text-align: right;
       }
 
       .left-copy p {
@@ -412,6 +414,7 @@
       .care-line {
         gap: 0.45rem;
         align-items: center;
+        justify-content: flex-end;
       }
 
       .care-mark {
@@ -421,7 +424,7 @@
 
       .legal {
         grid-area: legal;
-        width: min(100%, 520px);
+        width: min(100%, var(--legal-width));
         justify-self: center;
         margin-top: 1.15rem;
         padding: 0;
@@ -429,13 +432,13 @@
 
       .right-copy {
         grid-area: contact;
-        width: 100%;
+        width: min(100%, var(--legal-width));
         max-width: none;
+        justify-self: center;
         margin-top: 0.95rem;
-        padding: 0 0.1rem;
+        padding: 0;
         font-size: clamp(0.95rem, 4.8vw, 1.2rem);
-        text-align: left;
-        justify-self: stretch;
+        text-align: right;
         color: var(--muted);
       }
 
