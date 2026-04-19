@@ -522,15 +522,14 @@
       viewer.scale = START_SCALE;
     }
 
-    function startReturn() {
+    function startReturnAfterRelease() {
       const token = ++returnToken;
 
       clearResumeTimer();
 
-      stopRotationCompletely();
-
-      // Immediately break model-viewer's drag state so the return begins now.
+      // Drag has ended. Now stop controls and begin return.
       viewer.cameraControls = false;
+      stopRotationCompletely();
       setStartPoseAnimated();
 
       resumeTimer = setTimeout(() => {
@@ -555,6 +554,7 @@
       returnToken++;
       clearResumeTimer();
 
+      // While holding: allow drag, but keep rotation fully stopped.
       viewer.cameraControls = true;
       stopRotationCompletely();
     }
@@ -562,8 +562,11 @@
     function handlePressEnd() {
       if (!booted || !isPointerDown) return;
 
+      // First mark the hold as ended.
       isPointerDown = false;
-      startReturn();
+
+      // Then return to the start pose.
+      startReturnAfterRelease();
     }
 
     viewer.addEventListener('load', () => {
