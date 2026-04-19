@@ -483,7 +483,7 @@
     const START_ORBIT = '-38deg 66deg 112%';
     const START_TARGET = '0m 0m 0m';
     const START_SCALE = '0.92 0.92 0.92';
-    const RETURN_DURATION_MS = 480;
+    const RETURN_DURATION_MS = 430;
 
     let booted = false;
     let isPointerDown = false;
@@ -499,7 +499,6 @@
 
     function stopRotationCompletely() {
       viewer.autoRotate = false;
-
       if (typeof viewer.resetTurntableRotation === 'function') {
         viewer.resetTurntableRotation(0);
       }
@@ -527,26 +526,26 @@
       const token = ++returnToken;
 
       clearResumeTimer();
+
       stopRotationCompletely();
 
-      requestAnimationFrame(() => {
+      // Immediately break model-viewer's drag state so the return begins now.
+      viewer.cameraControls = false;
+      setStartPoseAnimated();
+
+      resumeTimer = setTimeout(() => {
         if (token !== returnToken) return;
+        if (isPointerDown) return;
 
-        setStartPoseAnimated();
+        setStartPoseInstant();
 
-        resumeTimer = setTimeout(() => {
+        requestAnimationFrame(() => {
           if (token !== returnToken) return;
-          if (isPointerDown) return;
-
-          setStartPoseInstant();
-
-          requestAnimationFrame(() => {
-            if (token !== returnToken) return;
-            viewer.jumpCameraToGoal = false;
-            viewer.autoRotate = true;
-          });
-        }, RETURN_DURATION_MS);
-      });
+          viewer.jumpCameraToGoal = false;
+          viewer.cameraControls = true;
+          viewer.autoRotate = true;
+        });
+      }, RETURN_DURATION_MS);
     }
 
     function handlePressStart() {
@@ -555,6 +554,8 @@
       isPointerDown = true;
       returnToken++;
       clearResumeTimer();
+
+      viewer.cameraControls = true;
       stopRotationCompletely();
     }
 
@@ -572,6 +573,7 @@
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           viewer.jumpCameraToGoal = false;
+          viewer.cameraControls = true;
           viewer.autoRotate = true;
           booted = true;
         });
