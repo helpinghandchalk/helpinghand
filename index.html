@@ -1,5 +1,3 @@
-Here’s the full amended HTML with the loading bar centralized inside the `model-viewer`. This uses the `progress-bar` slot and the `progress` event from `model-viewer`, which is the intended way to replace the default top loading bar with a custom centered one. ([modelviewer.dev][1])
-
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -237,34 +235,6 @@ Here’s the full amended HTML with the loading bar centralized inside the `mode
       touch-action: none;
     }
 
-    .progress-bar {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: min(42vw, 220px);
-      height: 6px;
-      background: rgba(22, 22, 22, 0.12);
-      border-radius: 999px;
-      overflow: hidden;
-      opacity: 1;
-      transition: opacity 0.2s ease;
-      z-index: 80;
-      pointer-events: none;
-    }
-
-    .progress-bar.hide {
-      opacity: 0;
-    }
-
-    .update-bar {
-      width: 0%;
-      height: 100%;
-      background: rgba(22, 22, 22, 0.58);
-      border-radius: inherit;
-      transition: width 0.12s linear;
-    }
-
     .product-fallback img {
       width: 100%;
       height: 100%;
@@ -409,10 +379,6 @@ Here’s the full amended HTML with the loading bar centralized inside the `mode
         transform: translate(-50%, -50%);
       }
 
-      .progress-bar {
-        width: min(48vw, 220px);
-      }
-
       .price {
         grid-area: product;
         position: relative;
@@ -532,10 +498,6 @@ Here’s the full amended HTML with the loading bar centralized inside the `mode
               interpolation-decay="400"
               style="--poster-color: transparent;"
             >
-              <div class="progress-bar hide" slot="progress-bar">
-                <div class="update-bar"></div>
-              </div>
-
               <div class="product-fallback" slot="poster">
                 <img src="product-poster.png" alt="Helping Hand chalk tray" draggable="false" />
               </div>
@@ -651,8 +613,6 @@ Here’s the full amended HTML with the loading bar centralized inside the `mode
 
     const viewer = document.getElementById('productViewer');
     const page = document.querySelector('.page');
-    const progressBar = viewer.querySelector('.progress-bar');
-    const updateBar = viewer.querySelector('.update-bar');
 
     const START_TARGET = '0m 0m 0m';
     const START_SCALE = '0.92 0.92 0.92';
@@ -709,26 +669,6 @@ Here’s the full amended HTML with the loading bar centralized inside the `mode
         fitRaf = null;
         scaleToFit();
       });
-    }
-
-    function onProgress(event) {
-      const totalProgress = event.detail.totalProgress;
-
-      if (totalProgress === 0) {
-        progressBar.classList.remove('hide');
-        updateBar.style.width = '0%';
-        return;
-      }
-
-      updateBar.style.width = `${totalProgress * 100}%`;
-
-      if (totalProgress === 1) {
-        setTimeout(() => {
-          progressBar.classList.add('hide');
-        }, 150);
-      } else {
-        progressBar.classList.remove('hide');
-      }
     }
 
     function stopRotationCompletely() {
@@ -881,8 +821,6 @@ Here’s the full amended HTML with the loading bar centralized inside the `mode
       });
     }
 
-    viewer.addEventListener('progress', onProgress);
-
     viewer.addEventListener('camera-change', () => {
       if (!booted) return;
       if (!isPointerDown) return;
@@ -904,7 +842,6 @@ Here’s the full amended HTML with the loading bar centralized inside the `mode
           viewer.autoRotate = true;
           booted = true;
           requestScaleToFit();
-          progressBar.classList.add('hide');
         });
       });
     });
@@ -926,5 +863,3 @@ Here’s the full amended HTML with the loading bar centralized inside the `mode
 </body>
 </html>
 ```
-
-[1]: https://modelviewer.dev/docs/?utm_source=chatgpt.com "<model-viewer> Examples and Documentation"
