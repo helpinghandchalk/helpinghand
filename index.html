@@ -491,12 +491,19 @@
     let cycleId = 0;
     let returnStartTimer = null;
     let returnFinishTimer = null;
+    let returnStartIsFrame = false;
 
     function clearTimers() {
       if (returnStartTimer) {
-        clearTimeout(returnStartTimer);
+        if (returnStartIsFrame) {
+          cancelAnimationFrame(returnStartTimer);
+        } else {
+          clearTimeout(returnStartTimer);
+        }
         returnStartTimer = null;
+        returnStartIsFrame = false;
       }
+
       if (returnFinishTimer) {
         clearTimeout(returnFinishTimer);
         returnFinishTimer = null;
@@ -585,11 +592,12 @@
 
       clearTimers();
 
-      // Defer one tick so model-viewer fully exits its internal drag state
-      // before we start the spring-back.
-      returnStartTimer = setTimeout(() => {
+      returnStartIsFrame = true;
+      returnStartTimer = requestAnimationFrame(() => {
+        returnStartTimer = null;
+        returnStartIsFrame = false;
         beginReturn(thisCycle);
-      }, 0);
+      });
     }
 
     viewer.addEventListener('load', () => {
