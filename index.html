@@ -268,7 +268,8 @@
       text-align: justify;
       text-align-last: justify;
       text-justify: inter-word;
-      width: min(100%, var(--legal-width));
+      width: var(--legal-width);
+      max-width: 100%;
       color: var(--faint);
       font-size: 0.78rem;
       line-height: 1.28;
@@ -321,7 +322,7 @@
           "copy"
           "legal"
           "contact";
-        padding: 1.2rem 0.35rem 1.1rem;
+        padding: 1.2rem 1rem 1.1rem;
         gap: 0;
         min-height: 100vh;
       }
@@ -343,7 +344,7 @@
       }
 
       .logo-wrap img {
-        width: min(88vw, 430px);
+        width: min(82vw, 430px);
         margin: 0 auto;
       }
 
@@ -383,7 +384,7 @@
         position: relative;
         justify-self: end;
         align-self: end;
-        right: 0.05rem;
+        right: calc((100% - var(--legal-width)) / 2);
         left: auto;
         bottom: 0.35rem;
         top: auto;
@@ -398,7 +399,8 @@
 
       .left-copy {
         grid-area: copy;
-        width: calc(100% - 0.1rem);
+        width: var(--legal-width);
+        max-width: var(--legal-width);
         justify-self: center;
         margin-top: 0.15rem;
         padding: 0;
@@ -424,7 +426,8 @@
 
       .legal {
         grid-area: legal;
-        width: calc(100% - 0.1rem);
+        width: var(--legal-width);
+        max-width: var(--legal-width);
         justify-self: center;
         margin-top: 1.15rem;
         padding: 0;
@@ -432,8 +435,8 @@
 
       .right-copy {
         grid-area: contact;
-        width: calc(100% - 0.1rem);
-        max-width: none;
+        width: var(--legal-width);
+        max-width: var(--legal-width);
         justify-self: center;
         margin-top: 0.95rem;
         padding: 0;
