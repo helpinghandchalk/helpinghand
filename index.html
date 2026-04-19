@@ -234,6 +234,34 @@
       touch-action: none;
     }
 
+    .progress-bar {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: min(42vw, 220px);
+      height: 6px;
+      background: rgba(22, 22, 22, 0.12);
+      border-radius: 999px;
+      overflow: hidden;
+      opacity: 1;
+      transition: opacity 0.2s ease;
+      z-index: 80;
+      pointer-events: none;
+    }
+
+    .progress-bar.hide {
+      opacity: 0;
+    }
+
+    .update-bar {
+      width: 0%;
+      height: 100%;
+      background: rgba(22, 22, 22, 0.58);
+      border-radius: inherit;
+      transition: width 0.12s linear;
+    }
+
     .product-fallback img {
       width: 100%;
       height: 100%;
@@ -268,8 +296,7 @@
       text-align: justify;
       text-align-last: justify;
       text-justify: inter-word;
-      width: var(--legal-width);
-      max-width: 100%;
+      width: min(100%, var(--legal-width));
       color: var(--faint);
       font-size: 0.78rem;
       line-height: 1.28;
@@ -379,12 +406,16 @@
         transform: translate(-50%, -50%);
       }
 
+      .progress-bar {
+        width: min(48vw, 220px);
+      }
+
       .price {
         grid-area: product;
         position: relative;
         justify-self: end;
         align-self: end;
-        right: calc((100% - var(--legal-width)) / 2);
+        right: calc((100% - min(100%, var(--legal-width))) / 2);
         left: auto;
         bottom: 0.35rem;
         top: auto;
@@ -399,8 +430,7 @@
 
       .left-copy {
         grid-area: copy;
-        width: var(--legal-width);
-        max-width: var(--legal-width);
+        width: min(100%, var(--legal-width));
         justify-self: center;
         margin-top: 0.15rem;
         padding: 0;
@@ -426,8 +456,7 @@
 
       .legal {
         grid-area: legal;
-        width: var(--legal-width);
-        max-width: var(--legal-width);
+        width: min(100%, var(--legal-width));
         justify-self: center;
         margin-top: 1.15rem;
         padding: 0;
@@ -435,8 +464,8 @@
 
       .right-copy {
         grid-area: contact;
-        width: var(--legal-width);
-        max-width: var(--legal-width);
+        width: min(100%, var(--legal-width));
+        max-width: none;
         justify-self: center;
         margin-top: 0.95rem;
         padding: 0;
@@ -500,6 +529,10 @@
               interpolation-decay="400"
               style="--poster-color: transparent;"
             >
+              <div class="progress-bar hide" slot="progress-bar">
+                <div class="update-bar"></div>
+              </div>
+
               <div class="product-fallback" slot="poster">
                 <img src="product-poster.png" alt="Helping Hand chalk tray" draggable="false" />
               </div>
@@ -615,6 +648,8 @@
 
     const viewer = document.getElementById('productViewer');
     const page = document.querySelector('.page');
+    const progressBar = viewer.querySelector('.progress-bar');
+    const updateBar = viewer.querySelector('.update-bar');
 
     const START_TARGET = '0m 0m 0m';
     const START_SCALE = '0.92 0.92 0.92';
@@ -673,6 +708,26 @@
       });
     }
 
+    function onProgress(event) {
+      const totalProgress = event.detail.totalProgress;
+
+      if (totalProgress === 0) {
+        progressBar.classList.remove('hide');
+        updateBar.style.width = '0%';
+        return;
+      }
+
+      updateBar.style.width = `${totalProgress * 100}%`;
+
+      if (totalProgress === 1) {
+        setTimeout(() => {
+          progressBar.classList.add('hide');
+        }, 150);
+      } else {
+        progressBar.classList.remove('hide');
+      }
+    }
+
     function stopRotationCompletely() {
       viewer.autoRotate = false;
       if (typeof viewer.resetTurntableRotation === 'function') {
@@ -718,6 +773,58 @@
         phi: orbit.phi,
         radius: orbit.radius
       };
+    }
+
+    function getPageScale() {
+      const rect = page.getBoundingClientRect();
+      return {
+        x: rect.width / page.offsetWidth || 1,
+        y: rect.height / page.offsetHeight || 1,
+        rect
+      };
+    }
+
+    function getUnscaledClientPoint(clientX, clientY) {
+      const { x: scaleX, y: scaleY, rect } = getPageScale();
+      return {
+        x: rect.left + ((clientX - rect.left) / scaleX),
+        y: rect.top + ((clientY - rect.top) / scaleY)
+      };
+    }
+
+    function eventTargetsViewer(event) {
+      if (typeof event.composedPath === 'function') {
+        return event.composedPath().includes(viewer);
+      }
+      return event.target === viewer || viewer.contains(event.target);
+    }
+
+    function pointerHitsModel(clientX, clientY) {
+      if (typeof viewer.positionAndNormalFromPoint !== 'function') {
+        return true;
+      }
+
+      const point = getUnscaledClientPoint(clientX, clientY);
+      const hit = viewer.positionAndNormalFromPoint(point.x, point.y);
+      return !!hit;
+    }
+
+    function gatePointerDown(event) {
+      if (!booted) return;
+      if (!eventTargetsViewer(event)) return;
+      if (progressBar && !progressBar.classList.contains('hide')) return;
+
+      if (!pointerHitsModel(event.clientX, event.clientY)) {
+        viewer.cameraControls = false;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        requestAnimationFrame(() => {
+          if (!isPointerDown) {
+            viewer.cameraControls = true;
+          }
+        });
+      }
     }
 
     function captureStartOrbit() {
@@ -823,6 +930,8 @@
       });
     }
 
+    viewer.addEventListener('progress', onProgress);
+
     viewer.addEventListener('camera-change', () => {
       if (!booted) return;
       if (!isPointerDown) return;
@@ -844,6 +953,7 @@
           viewer.autoRotate = true;
           booted = true;
           requestScaleToFit();
+          progressBar.classList.add('hide');
         });
       });
     });
@@ -851,6 +961,7 @@
     window.addEventListener('load', requestScaleToFit);
     window.addEventListener('resize', requestScaleToFit);
     window.addEventListener('orientationchange', requestScaleToFit);
+    window.addEventListener('pointerdown', gatePointerDown, true);
 
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', requestScaleToFit);
