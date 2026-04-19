@@ -244,8 +244,9 @@
 
     .price {
       align-self: start;
-      justify-self: start;
-      margin-left: 1rem;
+      justify-self: end;
+      margin-left: 0;
+      margin-right: 1rem;
       user-select: none;
       position: relative;
       z-index: 4;
@@ -302,6 +303,12 @@
       .page {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto auto auto auto;
+        grid-template-areas:
+          "logo"
+          "product"
+          "copy"
+          "legal"
+          "contact";
         padding: 1.2rem 1rem 1.1rem;
         gap: 0;
         min-height: 100vh;
@@ -318,7 +325,7 @@
       }
 
       .logo-wrap {
-        grid-row: 1;
+        grid-area: logo;
         justify-self: center;
         margin-top: 0.1rem;
         margin-bottom: 0.35rem;
@@ -330,27 +337,23 @@
       }
 
       .center-stage {
-        grid-row: 2;
-        width: 100%;
-        min-height: auto;
-        align-content: start;
-        justify-items: center;
-        margin-top: -0.25rem;
+        display: contents;
       }
 
       .product-shell {
-        width: 100%;
-        max-width: 100%;
-        gap: 0;
-        position: relative;
+        display: contents;
       }
 
       .product-stage {
+        grid-area: product;
+        justify-self: center;
+        align-self: start;
         width: 100%;
         height: 48vh;
         min-height: 360px;
         max-height: 520px;
         pointer-events: none;
+        position: relative;
       }
 
       .product-stage model-viewer,
@@ -365,13 +368,15 @@
       }
 
       .price {
-        position: absolute;
-        right: 0.8rem;
-        top: 67%;
+        grid-area: product;
+        position: relative;
+        justify-self: end;
+        align-self: end;
+        right: 0.65rem;
+        bottom: 0.35rem;
+        top: auto;
         margin: 0;
         z-index: 50;
-        justify-self: unset;
-        align-self: unset;
       }
 
       .price img {
@@ -380,7 +385,7 @@
       }
 
       .left-copy {
-        grid-row: 3;
+        grid-area: copy;
         width: 100%;
         max-width: none;
         margin-top: 0.15rem;
@@ -404,7 +409,7 @@
       }
 
       .legal {
-        grid-row: 4;
+        grid-area: legal;
         width: 100%;
         max-width: none;
         margin-top: 1.15rem;
@@ -416,7 +421,7 @@
       }
 
       .right-copy {
-        grid-row: 5;
+        grid-area: contact;
         width: 100%;
         max-width: none;
         margin-top: 0.95rem;
