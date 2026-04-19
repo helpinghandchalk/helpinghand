@@ -484,7 +484,6 @@
       }
     });
 
-    // Extra zoom blocking for mobile Safari / touchpads.
     document.addEventListener('gesturestart', (e) => e.preventDefault(), { passive: false });
     document.addEventListener('gesturechange', (e) => e.preventDefault(), { passive: false });
     document.addEventListener('gestureend', (e) => e.preventDefault(), { passive: false });
@@ -518,9 +517,13 @@
     let returnRaf = null;
     let resumeRaf = null;
     let startOrbitSnapshot = null;
+    let lastHeldOrbit = null;
 
     function stopRotationCompletely() {
       viewer.autoRotate = false;
+      if (typeof viewer.resetTurntableRotation === 'function') {
+        viewer.resetTurntableRotation(0);
+      }
     }
 
     function cancelReturnAnimation() {
@@ -555,8 +558,17 @@
       };
     }
 
+    function cloneOrbit(orbit) {
+      return {
+        theta: orbit.theta,
+        phi: orbit.phi,
+        radius: orbit.radius
+      };
+    }
+
     function captureStartOrbit() {
-      startOrbitSnapshot = getLiveOrbit();
+      startOrbitSnapshot = cloneOrbit(getLiveOrbit());
+      lastHeldOrbit = cloneOrbit(startOrbitSnapshot);
     }
 
     function setBasePose() {
@@ -564,16 +576,17 @@
       viewer.scale = START_SCALE;
     }
 
-    function tweenBackToStart(thisCycle) {
-      if (!startOrbitSnapshot) return;
+    function tweenBackToStart(thisCycle, fromOrbit) {
+      if (!startOrbitSnapshot || !fromOrbit) return;
 
-      const from = getLiveOrbit();
-      const to = startOrbitSnapshot;
+      const from = cloneOrbit(fromOrbit);
+      const to = cloneOrbit(startOrbitSnapshot);
       const startTime = performance.now();
 
       viewer.cameraControls = false;
       viewer.jumpCameraToGoal = true;
       setBasePose();
+      stopRotationCompletely();
 
       const step = (now) => {
         if (thisCycle !== cycleId) return;
@@ -595,6 +608,7 @@
         }
 
         viewer.cameraOrbit = orbitToString(to);
+        lastHeldOrbit = cloneOrbit(to);
 
         if (typeof viewer.resetTurntableRotation === 'function') {
           viewer.resetTurntableRotation(0);
@@ -623,6 +637,8 @@
       viewer.cameraControls = true;
       viewer.jumpCameraToGoal = false;
       stopRotationCompletely();
+
+      lastHeldOrbit = cloneOrbit(getLiveOrbit());
     }
 
     function handlePressEnd(event) {
@@ -642,15 +658,22 @@
       activePointerId = null;
 
       const thisCycle = cycleId;
+      const releaseOrbit = cloneOrbit(lastHeldOrbit || getLiveOrbit());
 
       cancelReturnAnimation();
 
       requestAnimationFrame(() => {
         if (thisCycle !== cycleId) return;
         if (isPointerDown) return;
-        tweenBackToStart(thisCycle);
+        tweenBackToStart(thisCycle, releaseOrbit);
       });
     }
+
+    viewer.addEventListener('camera-change', () => {
+      if (!booted) return;
+      if (!isPointerDown) return;
+      lastHeldOrbit = cloneOrbit(getLiveOrbit());
+    });
 
     viewer.addEventListener('load', () => {
       stopRotationCompletely();
