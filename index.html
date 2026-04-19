@@ -483,145 +483,134 @@
     const START_ORBIT = '-38deg 66deg 112%';
     const START_TARGET = '0m 0m 0m';
     const START_SCALE = '0.92 0.92 0.92';
+    const SETTLE_DELAY = 140;
+    const RETURN_FALLBACK_MS = 1200;
 
+    let booted = false;
     let isPointerDown = false;
     let isReturning = false;
-    let booted = false;
     let settleTimer = null;
-    let returnSafetyTimer = null;
+    let fallbackTimer = null;
+    let returnToken = 0;
 
-    function clearSettleTimer() {
+    function clearTimers() {
       if (settleTimer) {
         clearTimeout(settleTimer);
         settleTimer = null;
       }
-    }
-
-    function clearReturnSafetyTimer() {
-      if (returnSafetyTimer) {
-        clearTimeout(returnSafetyTimer);
-        returnSafetyTimer = null;
+      if (fallbackTimer) {
+        clearTimeout(fallbackTimer);
+        fallbackTimer = null;
       }
     }
 
     function stopRotationCompletely() {
       viewer.autoRotate = false;
-
       if (typeof viewer.resetTurntableRotation === 'function') {
         viewer.resetTurntableRotation(0);
       }
     }
 
-    function hardSetStartPose() {
-      stopRotationCompletely();
+    function setStartPoseInstant() {
       viewer.jumpCameraToGoal = true;
-      viewer.scale = START_SCALE;
       viewer.cameraTarget = START_TARGET;
       viewer.cameraOrbit = START_ORBIT;
+      viewer.scale = START_SCALE;
 
       if (typeof viewer.updateFraming === 'function') {
         viewer.updateFraming();
       }
-
-      if (typeof viewer.resetTurntableRotation === 'function') {
-        viewer.resetTurntableRotation(0);
-      }
     }
 
-    function beginSpringBack() {
-      clearSettleTimer();
-      clearReturnSafetyTimer();
-
-      isReturning = true;
-
-      stopRotationCompletely();
-
-      viewer.cameraControls = false;
+    function setStartPoseAnimated() {
       viewer.jumpCameraToGoal = false;
-      viewer.scale = START_SCALE;
       viewer.cameraTarget = START_TARGET;
       viewer.cameraOrbit = START_ORBIT;
-
-      if (typeof viewer.resetTurntableRotation === 'function') {
-        viewer.resetTurntableRotation(0);
-      }
-
-      returnSafetyTimer = setTimeout(() => {
-        if (!isReturning || isPointerDown) return;
-        finishSpringBackAndResume();
-      }, 900);
+      viewer.scale = START_SCALE;
     }
 
-    function finishSpringBackAndResume() {
-      clearSettleTimer();
-      clearReturnSafetyTimer();
+    function finishReturn(token) {
+      if (token !== returnToken) return;
+      if (isPointerDown) return;
 
+      clearTimers();
       isReturning = false;
 
-      viewer.jumpCameraToGoal = true;
-      viewer.scale = START_SCALE;
-      viewer.cameraTarget = START_TARGET;
-      viewer.cameraOrbit = START_ORBIT;
-
-      if (typeof viewer.resetTurntableRotation === 'function') {
-        viewer.resetTurntableRotation(0);
-      }
+      stopRotationCompletely();
+      setStartPoseInstant();
 
       requestAnimationFrame(() => {
+        if (token !== returnToken) return;
         viewer.jumpCameraToGoal = false;
-        viewer.cameraControls = true;
         viewer.autoRotate = true;
       });
     }
 
+    function startReturnToStart() {
+      const token = ++returnToken;
+
+      clearTimers();
+      isReturning = true;
+
+      stopRotationCompletely();
+      setStartPoseAnimated();
+
+      fallbackTimer = setTimeout(() => {
+        finishReturn(token);
+      }, RETURN_FALLBACK_MS);
+    }
+
+    function handlePressStart() {
+      if (!booted) return;
+
+      isPointerDown = true;
+      isReturning = false;
+      returnToken++;
+      clearTimers();
+
+      stopRotationCompletely();
+    }
+
+    function handlePressEnd() {
+      if (!booted) return;
+      if (!isPointerDown) return;
+
+      isPointerDown = false;
+      startReturnToStart();
+    }
+
     viewer.addEventListener('load', () => {
-      hardSetStartPose();
+      stopRotationCompletely();
+      setStartPoseInstant();
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           viewer.jumpCameraToGoal = false;
-          viewer.cameraControls = true;
           viewer.autoRotate = true;
           booted = true;
         });
       });
     });
 
-    viewer.addEventListener('pointerdown', () => {
-      if (!booted) return;
-
-      isPointerDown = true;
-      isReturning = false;
-
-      clearSettleTimer();
-      clearReturnSafetyTimer();
-
-      viewer.cameraControls = true;
-      stopRotationCompletely();
-    }, true);
-
-    function releasePointer() {
-      if (!booted || !isPointerDown) return;
-
-      isPointerDown = false;
-      beginSpringBack();
-    }
-
-    viewer.addEventListener('pointerup', releasePointer, true);
-    viewer.addEventListener('pointercancel', releasePointer, true);
-    window.addEventListener('pointerup', releasePointer, true);
-    window.addEventListener('pointercancel', releasePointer, true);
-    window.addEventListener('blur', releasePointer, true);
+    viewer.addEventListener('pointerdown', handlePressStart, true);
+    window.addEventListener('pointerup', handlePressEnd, true);
+    window.addEventListener('pointercancel', handlePressEnd, true);
+    window.addEventListener('blur', handlePressEnd, true);
 
     viewer.addEventListener('camera-change', () => {
-      if (!booted || !isReturning || isPointerDown) return;
+      if (!booted) return;
+      if (!isReturning) return;
+      if (isPointerDown) return;
 
-      clearSettleTimer();
+      const token = returnToken;
+
+      if (settleTimer) {
+        clearTimeout(settleTimer);
+      }
 
       settleTimer = setTimeout(() => {
-        if (!isReturning || isPointerDown) return;
-        finishSpringBackAndResume();
-      }, 120);
+        finishReturn(token);
+      }, SETTLE_DELAY);
     });
   </script>
 </body>
