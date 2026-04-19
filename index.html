@@ -487,13 +487,19 @@
 
     let booted = false;
     let isPointerDown = false;
-    let returnToken = 0;
-    let resumeTimer = null;
+    let activePointerId = null;
+    let cycleId = 0;
+    let returnStartTimer = null;
+    let returnFinishTimer = null;
 
-    function clearResumeTimer() {
-      if (resumeTimer) {
-        clearTimeout(resumeTimer);
-        resumeTimer = null;
+    function clearTimers() {
+      if (returnStartTimer) {
+        clearTimeout(returnStartTimer);
+        returnStartTimer = null;
+      }
+      if (returnFinishTimer) {
+        clearTimeout(returnFinishTimer);
+        returnFinishTimer = null;
       }
     }
 
@@ -522,24 +528,22 @@
       viewer.scale = START_SCALE;
     }
 
-    function startReturnAfterRelease() {
-      const token = ++returnToken;
+    function beginReturn(thisCycle) {
+      if (thisCycle !== cycleId) return;
+      if (isPointerDown) return;
 
-      clearResumeTimer();
-
-      // Drag has ended. Now stop controls and begin return.
-      viewer.cameraControls = false;
       stopRotationCompletely();
+      viewer.cameraControls = false;
       setStartPoseAnimated();
 
-      resumeTimer = setTimeout(() => {
-        if (token !== returnToken) return;
+      returnFinishTimer = setTimeout(() => {
+        if (thisCycle !== cycleId) return;
         if (isPointerDown) return;
 
         setStartPoseInstant();
 
         requestAnimationFrame(() => {
-          if (token !== returnToken) return;
+          if (thisCycle !== cycleId) return;
           viewer.jumpCameraToGoal = false;
           viewer.cameraControls = true;
           viewer.autoRotate = true;
@@ -547,26 +551,45 @@
       }, RETURN_DURATION_MS);
     }
 
-    function handlePressStart() {
+    function handlePressStart(event) {
       if (!booted) return;
 
-      isPointerDown = true;
-      returnToken++;
-      clearResumeTimer();
+      cycleId++;
+      clearTimers();
 
-      // While holding: allow drag, but keep rotation fully stopped.
+      isPointerDown = true;
+      activePointerId = event.pointerId ?? 'mouse';
+
       viewer.cameraControls = true;
+      viewer.jumpCameraToGoal = false;
       stopRotationCompletely();
     }
 
-    function handlePressEnd() {
-      if (!booted || !isPointerDown) return;
+    function handlePressEnd(event) {
+      if (!booted) return;
+      if (!isPointerDown) return;
 
-      // First mark the hold as ended.
+      if (
+        event &&
+        event.pointerId != null &&
+        activePointerId != null &&
+        event.pointerId !== activePointerId
+      ) {
+        return;
+      }
+
       isPointerDown = false;
+      activePointerId = null;
 
-      // Then return to the start pose.
-      startReturnAfterRelease();
+      const thisCycle = cycleId;
+
+      clearTimers();
+
+      // Defer one tick so model-viewer fully exits its internal drag state
+      // before we start the spring-back.
+      returnStartTimer = setTimeout(() => {
+        beginReturn(thisCycle);
+      }, 0);
     }
 
     viewer.addEventListener('load', () => {
@@ -586,7 +609,7 @@
     viewer.addEventListener('pointerdown', handlePressStart, true);
     window.addEventListener('pointerup', handlePressEnd, true);
     window.addEventListener('pointercancel', handlePressEnd, true);
-    window.addEventListener('blur', handlePressEnd, true);
+    window.addEventListener('blur', () => handlePressEnd(), true);
   </script>
 </body>
 </html>
