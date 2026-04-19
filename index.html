@@ -18,7 +18,10 @@
   </script>
 
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+  />
   <title>Helping Hand</title>
   <style>
     :root {
@@ -43,6 +46,8 @@
       background: var(--bg);
       color: var(--text);
       font-family: Arial, Helvetica, sans-serif;
+      touch-action: none;
+      overscroll-behavior: none;
     }
 
     body {
@@ -208,6 +213,7 @@
       position: relative;
       z-index: 30;
       pointer-events: auto;
+      touch-action: none;
     }
 
     .product-fallback img {
@@ -478,91 +484,138 @@
       }
     });
 
+    // Extra zoom blocking for mobile Safari / touchpads.
+    document.addEventListener('gesturestart', (e) => e.preventDefault(), { passive: false });
+    document.addEventListener('gesturechange', (e) => e.preventDefault(), { passive: false });
+    document.addEventListener('gestureend', (e) => e.preventDefault(), { passive: false });
+
+    document.addEventListener('wheel', (e) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', (e) => {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, { passive: false });
+
     const viewer = document.getElementById('productViewer');
 
-    const START_ORBIT = '-38deg 66deg 112%';
     const START_TARGET = '0m 0m 0m';
     const START_SCALE = '0.92 0.92 0.92';
-    const RETURN_DURATION_MS = 430;
+    const START_ORBIT_DECLARATION = '-38deg 66deg 112%';
+    const RETURN_DURATION_MS = 320;
 
     let booted = false;
     let isPointerDown = false;
     let activePointerId = null;
     let cycleId = 0;
-    let returnStartTimer = null;
-    let returnFinishTimer = null;
-    let returnStartIsFrame = false;
-
-    function clearTimers() {
-      if (returnStartTimer) {
-        if (returnStartIsFrame) {
-          cancelAnimationFrame(returnStartTimer);
-        } else {
-          clearTimeout(returnStartTimer);
-        }
-        returnStartTimer = null;
-        returnStartIsFrame = false;
-      }
-
-      if (returnFinishTimer) {
-        clearTimeout(returnFinishTimer);
-        returnFinishTimer = null;
-      }
-    }
+    let returnRaf = null;
+    let resumeRaf = null;
+    let startOrbitSnapshot = null;
 
     function stopRotationCompletely() {
       viewer.autoRotate = false;
-      if (typeof viewer.resetTurntableRotation === 'function') {
-        viewer.resetTurntableRotation(0);
+    }
+
+    function cancelReturnAnimation() {
+      if (returnRaf) {
+        cancelAnimationFrame(returnRaf);
+        returnRaf = null;
+      }
+      if (resumeRaf) {
+        cancelAnimationFrame(resumeRaf);
+        resumeRaf = null;
       }
     }
 
-    function setStartPoseInstant() {
-      viewer.jumpCameraToGoal = true;
-      viewer.cameraTarget = START_TARGET;
-      viewer.cameraOrbit = START_ORBIT;
-      viewer.scale = START_SCALE;
-
-      if (typeof viewer.updateFraming === 'function') {
-        viewer.updateFraming();
-      }
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
     }
 
-    function setStartPoseAnimated() {
-      viewer.jumpCameraToGoal = false;
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function orbitToString(orbit) {
+      return `${orbit.theta}rad ${orbit.phi}rad ${orbit.radius}m`;
+    }
+
+    function getLiveOrbit() {
+      const orbit = viewer.getCameraOrbit();
+      return {
+        theta: orbit.theta,
+        phi: orbit.phi,
+        radius: orbit.radius
+      };
+    }
+
+    function captureStartOrbit() {
+      startOrbitSnapshot = getLiveOrbit();
+    }
+
+    function setBasePose() {
       viewer.cameraTarget = START_TARGET;
-      viewer.cameraOrbit = START_ORBIT;
       viewer.scale = START_SCALE;
     }
 
-    function beginReturn(thisCycle) {
-      if (thisCycle !== cycleId) return;
-      if (isPointerDown) return;
+    function tweenBackToStart(thisCycle) {
+      if (!startOrbitSnapshot) return;
 
-      stopRotationCompletely();
+      const from = getLiveOrbit();
+      const to = startOrbitSnapshot;
+      const startTime = performance.now();
+
       viewer.cameraControls = false;
-      setStartPoseAnimated();
+      viewer.jumpCameraToGoal = true;
+      setBasePose();
 
-      returnFinishTimer = setTimeout(() => {
+      const step = (now) => {
         if (thisCycle !== cycleId) return;
         if (isPointerDown) return;
 
-        setStartPoseInstant();
+        const elapsed = now - startTime;
+        const t = Math.min(elapsed / RETURN_DURATION_MS, 1);
+        const eased = easeOutCubic(t);
 
-        requestAnimationFrame(() => {
+        viewer.cameraOrbit = orbitToString({
+          theta: lerp(from.theta, to.theta, eased),
+          phi: lerp(from.phi, to.phi, eased),
+          radius: lerp(from.radius, to.radius, eased)
+        });
+
+        if (t < 1) {
+          returnRaf = requestAnimationFrame(step);
+          return;
+        }
+
+        viewer.cameraOrbit = orbitToString(to);
+
+        if (typeof viewer.resetTurntableRotation === 'function') {
+          viewer.resetTurntableRotation(0);
+        }
+
+        resumeRaf = requestAnimationFrame(() => {
           if (thisCycle !== cycleId) return;
           viewer.jumpCameraToGoal = false;
           viewer.cameraControls = true;
           viewer.autoRotate = true;
         });
-      }, RETURN_DURATION_MS);
+      };
+
+      returnRaf = requestAnimationFrame(step);
     }
 
     function handlePressStart(event) {
       if (!booted) return;
 
       cycleId++;
-      clearTimers();
+      cancelReturnAnimation();
 
       isPointerDown = true;
       activePointerId = event.pointerId ?? 'mouse';
@@ -590,21 +643,24 @@
 
       const thisCycle = cycleId;
 
-      clearTimers();
+      cancelReturnAnimation();
 
-      returnStartIsFrame = true;
-      returnStartTimer = requestAnimationFrame(() => {
-        returnStartTimer = null;
-        returnStartIsFrame = false;
-        beginReturn(thisCycle);
+      requestAnimationFrame(() => {
+        if (thisCycle !== cycleId) return;
+        if (isPointerDown) return;
+        tweenBackToStart(thisCycle);
       });
     }
 
     viewer.addEventListener('load', () => {
       stopRotationCompletely();
-      setStartPoseInstant();
+      viewer.jumpCameraToGoal = true;
+      setBasePose();
+      viewer.cameraOrbit = START_ORBIT_DECLARATION;
 
       requestAnimationFrame(() => {
+        captureStartOrbit();
+
         requestAnimationFrame(() => {
           viewer.jumpCameraToGoal = false;
           viewer.cameraControls = true;
