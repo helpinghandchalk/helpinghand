@@ -381,10 +381,10 @@
       .price {
         grid-area: product;
         position: relative;
-        justify-self: start;
+        justify-self: end;
         align-self: end;
-        left: calc((100% - min(100%, var(--legal-width))) / 2);
-        right: auto;
+        right: calc((100% - min(100%, var(--legal-width))) / 2);
+        left: auto;
         bottom: 0.35rem;
         top: auto;
         margin: 0;
@@ -404,7 +404,7 @@
         padding: 0;
         font-size: clamp(1rem, 5vw, 1.45rem);
         line-height: 1.28;
-        text-align: right;
+        text-align: left;
       }
 
       .left-copy p {
@@ -414,7 +414,7 @@
       .care-line {
         gap: 0.45rem;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: flex-start;
       }
 
       .care-mark {
@@ -438,7 +438,7 @@
         margin-top: 0.95rem;
         padding: 0;
         font-size: clamp(0.95rem, 4.8vw, 1.2rem);
-        text-align: right;
+        text-align: left;
         color: var(--muted);
       }
 
