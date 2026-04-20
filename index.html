@@ -254,17 +254,24 @@
       margin-top: -12rem;
     }
 
-    .price a {
+    .price-click {
       display: inline-block;
       text-decoration: none;
       cursor: pointer;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
       transition: transform 160ms ease;
+      outline: none;
     }
 
-    .price a:active {
+    .price-click:active {
       transform: scale(0.96);
+    }
+
+    .price-click:focus-visible {
+      outline: 2px solid rgba(22, 22, 22, 0.55);
+      outline-offset: 0.2rem;
+      border-radius: 0.3rem;
     }
 
     .price img {
@@ -518,12 +525,16 @@
           </div>
 
           <div class="price" aria-label="Price">
-            <a
-              href="https://buy.stripe.com/cNi3co4DIf2y2Vs1pDcAo00"
+            <div
+              class="price-click"
+              role="button"
+              tabindex="0"
               aria-label="Buy for £12"
+              onclick="handlePriceActivate(event)"
+              onkeydown="handlePriceKey(event)"
             >
               <img src="£12.png" alt="£12" draggable="false" />
-            </a>
+            </div>
           </div>
 
           <div class="legal">
@@ -595,6 +606,21 @@
     function triggerHaptic(ms = 18) {
       if ('vibrate' in navigator) {
         navigator.vibrate(ms);
+      }
+    }
+
+    function handlePriceActivate(event) {
+      if (event) {
+        event.preventDefault();
+      }
+      triggerHaptic(16);
+      goToCheckout();
+    }
+
+    function handlePriceKey(event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        handlePriceActivate(event);
       }
     }
 
@@ -924,7 +950,7 @@
 
       document.addEventListener('touchmove', (e) => {
         if (!isMobileLayout()) return;
-        if (!isEdgeSwipe || !startX || hasTriggered) return;
+        if (!isEdgeSwipe || startX === null || hasTriggered) return;
         if (e.touches.length !== 1) return;
 
         const touch = e.touches[0];
@@ -964,10 +990,6 @@
         hasTriggered = false;
       }, { passive: true });
     })();
-
-    document.querySelector('.price a')?.addEventListener('click', () => {
-      triggerHaptic(16);
-    }, { passive: true });
   </script>
 </body>
 </html>
