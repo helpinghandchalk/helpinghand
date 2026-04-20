@@ -22,10 +22,10 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
   />
-    <link rel="dns-prefetch" href="//buy.stripe.com">
+  <link rel="dns-prefetch" href="//buy.stripe.com">
   <link rel="preconnect" href="https://buy.stripe.com" crossorigin>
   <link rel="preconnect" href="https://js.stripe.com" crossorigin>
-  
+
   <title>Helping Hand</title>
   <style>
     :root {
@@ -256,23 +256,29 @@
       position: relative;
       z-index: 60;
       margin-top: -12rem;
+      display: grid;
+      justify-items: center;
+      gap: 0.2rem;
     }
 
-    .price-click {
+    .price-click,
+    .price-arrow {
       display: inline-block;
       text-decoration: none;
       cursor: pointer;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
-      transition: transform 160ms ease;
+      transition: transform 160ms ease, opacity 160ms ease;
       outline: none;
     }
 
-    .price-click:active {
+    .price-click:active,
+    .price-arrow:active {
       transform: scale(0.96);
     }
 
-    .price-click:focus-visible {
+    .price-click:focus-visible,
+    .price-arrow:focus-visible {
       outline: 2px solid rgba(22, 22, 22, 0.55);
       outline-offset: 0.2rem;
       border-radius: 0.3rem;
@@ -286,6 +292,20 @@
       transform: rotate(-5deg);
       pointer-events: none;
       -webkit-user-drag: none;
+    }
+
+    .price-arrow {
+      font-family: Calibri, "Calibri Body", Arial, Helvetica, sans-serif;
+      font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+      line-height: 1;
+      color: var(--text);
+      opacity: 0.88;
+      padding: 0.05rem 0.2rem;
+      margin-top: -0.15rem;
+    }
+
+    .price-arrow:hover {
+      opacity: 1;
     }
 
     .legal {
@@ -414,11 +434,16 @@
         top: auto;
         margin: 0;
         z-index: 80;
+        gap: 0.05rem;
       }
 
       .price img {
         width: clamp(3.8rem, 9vw, 5rem);
         transform: rotate(-5deg);
+      }
+
+      .price-arrow {
+        font-size: clamp(1.1rem, 4.6vw, 1.45rem);
       }
 
       .left-copy {
@@ -539,6 +564,15 @@
             >
               <img src="£12.png" alt="£12" draggable="false" />
             </div>
+
+            <div
+              class="price-arrow"
+              role="button"
+              tabindex="0"
+              aria-label="Go to checkout"
+              onclick="handlePriceActivate(event)"
+              onkeydown="handlePriceKey(event)"
+            >&#8594;</div>
           </div>
 
           <div class="legal">
@@ -918,82 +952,6 @@
     window.addEventListener('pointerup', handlePressEnd, true);
     window.addEventListener('pointercancel', handlePressEnd, true);
     window.addEventListener('blur', () => handlePressEnd(), true);
-
-    (function setupRightEdgeSwipeCheckout() {
-      let startX = null;
-      let startY = null;
-      let currentX = null;
-      let currentY = null;
-      let isEdgeSwipe = false;
-      let hasTriggered = false;
-
-      const EDGE_THRESHOLD = 32;
-      const MIN_SWIPE_DISTANCE = 72;
-      const MAX_VERTICAL_DRIFT = 64;
-      const ACTIVE_MOBILE_WIDTH = 1100;
-
-      function isMobileLayout() {
-        return window.innerWidth <= ACTIVE_MOBILE_WIDTH;
-      }
-
-      document.addEventListener('touchstart', (e) => {
-        if (!isMobileLayout()) return;
-        if (e.touches.length !== 1) return;
-
-        const touch = e.touches[0];
-        const screenWidth = window.innerWidth;
-
-        startX = touch.clientX;
-        startY = touch.clientY;
-        currentX = touch.clientX;
-        currentY = touch.clientY;
-        hasTriggered = false;
-
-        isEdgeSwipe = (screenWidth - startX) <= EDGE_THRESHOLD;
-      }, { passive: true });
-
-      document.addEventListener('touchmove', (e) => {
-        if (!isMobileLayout()) return;
-        if (!isEdgeSwipe || startX === null || hasTriggered) return;
-        if (e.touches.length !== 1) return;
-
-        const touch = e.touches[0];
-        currentX = touch.clientX;
-        currentY = touch.clientY;
-
-        const deltaX = startX - currentX;
-        const deltaY = Math.abs(startY - currentY);
-
-        if (deltaY > MAX_VERTICAL_DRIFT) {
-          isEdgeSwipe = false;
-          return;
-        }
-
-        if (deltaX > MIN_SWIPE_DISTANCE) {
-          hasTriggered = true;
-          triggerHaptic(24);
-          goToCheckout();
-        }
-      }, { passive: true });
-
-      document.addEventListener('touchend', () => {
-        startX = null;
-        startY = null;
-        currentX = null;
-        currentY = null;
-        isEdgeSwipe = false;
-        hasTriggered = false;
-      }, { passive: true });
-
-      document.addEventListener('touchcancel', () => {
-        startX = null;
-        startY = null;
-        currentX = null;
-        currentY = null;
-        isEdgeSwipe = false;
-        hasTriggered = false;
-      }, { passive: true });
-    })();
   </script>
 </body>
 </html>
