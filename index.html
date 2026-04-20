@@ -250,8 +250,21 @@
       margin-right: 1rem;
       user-select: none;
       position: relative;
-      z-index: 4;
+      z-index: 60;
       margin-top: -12rem;
+    }
+
+    .price a {
+      display: inline-block;
+      text-decoration: none;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 160ms ease;
+    }
+
+    .price a:active {
+      transform: scale(0.96);
     }
 
     .price img {
@@ -389,7 +402,7 @@
         bottom: 0.35rem;
         top: auto;
         margin: 0;
-        z-index: 50;
+        z-index: 80;
       }
 
       .price img {
@@ -505,7 +518,12 @@
           </div>
 
           <div class="price" aria-label="Price">
-            <img src="£12.png" alt="£12" draggable="false" />
+            <a
+              href="https://buy.stripe.com/cNi3co4DIf2y2Vs1pDcAo00"
+              aria-label="Buy for £12"
+            >
+              <img src="£12.png" alt="£12" draggable="false" />
+            </a>
           </div>
 
           <div class="legal">
@@ -522,7 +540,7 @@
               Apply a small amount to hands as needed to improve grip during climbing or training. Do
               not ingest. Do not inhale. Avoid contact with eyes. Keep out of reach of children. Use
               within 3 months of opening for best performance. Keep sealed when not in use. Store in a
-              cool, dry place. Keep away from moisture. Discontinue use if irritation occurs. 
+              cool, dry place. Keep away from moisture. Discontinue use if irritation occurs.
               © 2026 Helping Hand Chalk. All rights reserved.
             </p>
           </div>
@@ -545,6 +563,8 @@
   </div>
 
   <script>
+    const STRIPE_URL = 'https://buy.stripe.com/cNi3co4DIf2y2Vs1pDcAo00';
+
     function searchTerm(term) {
       const url = 'https://www.google.com/search?q=' + encodeURIComponent(term);
       window.open(url, '_blank', 'noopener,noreferrer');
@@ -565,6 +585,16 @@
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         openEmail();
+      }
+    }
+
+    function goToCheckout() {
+      window.location.href = STRIPE_URL;
+    }
+
+    function triggerHaptic(ms = 18) {
+      if ('vibrate' in navigator) {
+        navigator.vibrate(ms);
       }
     }
 
@@ -858,6 +888,86 @@
     window.addEventListener('pointerup', handlePressEnd, true);
     window.addEventListener('pointercancel', handlePressEnd, true);
     window.addEventListener('blur', () => handlePressEnd(), true);
+
+    (function setupRightEdgeSwipeCheckout() {
+      let startX = null;
+      let startY = null;
+      let currentX = null;
+      let currentY = null;
+      let isEdgeSwipe = false;
+      let hasTriggered = false;
+
+      const EDGE_THRESHOLD = 32;
+      const MIN_SWIPE_DISTANCE = 72;
+      const MAX_VERTICAL_DRIFT = 64;
+      const ACTIVE_MOBILE_WIDTH = 1100;
+
+      function isMobileLayout() {
+        return window.innerWidth <= ACTIVE_MOBILE_WIDTH;
+      }
+
+      document.addEventListener('touchstart', (e) => {
+        if (!isMobileLayout()) return;
+        if (e.touches.length !== 1) return;
+
+        const touch = e.touches[0];
+        const screenWidth = window.innerWidth;
+
+        startX = touch.clientX;
+        startY = touch.clientY;
+        currentX = touch.clientX;
+        currentY = touch.clientY;
+        hasTriggered = false;
+
+        isEdgeSwipe = (screenWidth - startX) <= EDGE_THRESHOLD;
+      }, { passive: true });
+
+      document.addEventListener('touchmove', (e) => {
+        if (!isMobileLayout()) return;
+        if (!isEdgeSwipe || !startX || hasTriggered) return;
+        if (e.touches.length !== 1) return;
+
+        const touch = e.touches[0];
+        currentX = touch.clientX;
+        currentY = touch.clientY;
+
+        const deltaX = startX - currentX;
+        const deltaY = Math.abs(startY - currentY);
+
+        if (deltaY > MAX_VERTICAL_DRIFT) {
+          isEdgeSwipe = false;
+          return;
+        }
+
+        if (deltaX > MIN_SWIPE_DISTANCE) {
+          hasTriggered = true;
+          triggerHaptic(24);
+          goToCheckout();
+        }
+      }, { passive: true });
+
+      document.addEventListener('touchend', () => {
+        startX = null;
+        startY = null;
+        currentX = null;
+        currentY = null;
+        isEdgeSwipe = false;
+        hasTriggered = false;
+      }, { passive: true });
+
+      document.addEventListener('touchcancel', () => {
+        startX = null;
+        startY = null;
+        currentX = null;
+        currentY = null;
+        isEdgeSwipe = false;
+        hasTriggered = false;
+      }, { passive: true });
+    })();
+
+    document.querySelector('.price a')?.addEventListener('click', () => {
+      triggerHaptic(16);
+    }, { passive: true });
   </script>
 </body>
 </html>
