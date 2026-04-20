@@ -25,7 +25,7 @@
   <link rel="dns-prefetch" href="//buy.stripe.com">
   <link rel="preconnect" href="https://buy.stripe.com" crossorigin>
   <link rel="preconnect" href="https://js.stripe.com" crossorigin>
-  
+
   <title>Helping Hand</title>
   <style>
     :root {
@@ -613,10 +613,22 @@
       }
     }
 
+    function warmStripeConnection() {
+      if (document.getElementById('stripe-preconnect-runtime')) return;
+
+      const link = document.createElement('link');
+      link.id = 'stripe-preconnect-runtime';
+      link.rel = 'preconnect';
+      link.href = 'https://buy.stripe.com';
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+    }
+
     function handlePriceActivate(event) {
       if (event) {
         event.preventDefault();
       }
+      warmStripeConnection();
       triggerHaptic(16);
       goToCheckout();
     }
@@ -672,6 +684,7 @@
 
     const viewer = document.getElementById('productViewer');
     const page = document.querySelector('.page');
+    const priceClick = document.querySelector('.price-click');
 
     const START_TARGET = '0m 0m 0m';
     const START_SCALE = '0.92 0.92 0.92';
@@ -919,21 +932,29 @@
     window.addEventListener('pointercancel', handlePressEnd, true);
     window.addEventListener('blur', () => handlePressEnd(), true);
 
-    (function setupRightEdgeSwipeCheckout() {
+    if (priceClick) {
+      priceClick.addEventListener('pointerdown', warmStripeConnection, { passive: true });
+      priceClick.addEventListener('touchstart', warmStripeConnection, { passive: true });
+      priceClick.addEventListener('mouseenter', warmStripeConnection, { passive: true });
+    }
+
+    (function setupGestureCheckout() {
       let startX = null;
       let startY = null;
-      let currentX = null;
-      let currentY = null;
-      let isEdgeSwipe = false;
       let hasTriggered = false;
 
-      const EDGE_THRESHOLD = 32;
-      const MIN_SWIPE_DISTANCE = 72;
-      const MAX_VERTICAL_DRIFT = 64;
+      const MIN_SWIPE_DISTANCE = 90;
+      const MAX_PERPENDICULAR_DRIFT = 80;
       const ACTIVE_MOBILE_WIDTH = 1100;
 
       function isMobileLayout() {
         return window.innerWidth <= ACTIVE_MOBILE_WIDTH;
+      }
+
+      function resetGesture() {
+        startX = null;
+        startY = null;
+        hasTriggered = false;
       }
 
       document.addEventListener('touchstart', (e) => {
@@ -941,58 +962,41 @@
         if (e.touches.length !== 1) return;
 
         const touch = e.touches[0];
-        const screenWidth = window.innerWidth;
 
         startX = touch.clientX;
         startY = touch.clientY;
-        currentX = touch.clientX;
-        currentY = touch.clientY;
         hasTriggered = false;
 
-        isEdgeSwipe = (screenWidth - startX) <= EDGE_THRESHOLD;
+        warmStripeConnection();
       }, { passive: true });
 
       document.addEventListener('touchmove', (e) => {
         if (!isMobileLayout()) return;
-        if (!isEdgeSwipe || startX === null || hasTriggered) return;
+        if (startX === null || startY === null || hasTriggered) return;
         if (e.touches.length !== 1) return;
 
         const touch = e.touches[0];
-        currentX = touch.clientX;
-        currentY = touch.clientY;
+        const deltaX = startX - touch.clientX;
+        const deltaY = startY - touch.clientY;
+        const absX = Math.abs(deltaX);
+        const absY = Math.abs(deltaY);
 
-        const deltaX = startX - currentX;
-        const deltaY = Math.abs(startY - currentY);
-
-        if (deltaY > MAX_VERTICAL_DRIFT) {
-          isEdgeSwipe = false;
+        if (deltaX > MIN_SWIPE_DISTANCE && absY < MAX_PERPENDICULAR_DRIFT) {
+          hasTriggered = true;
+          triggerHaptic(24);
+          goToCheckout();
           return;
         }
 
-        if (deltaX > MIN_SWIPE_DISTANCE) {
+        if (deltaY > MIN_SWIPE_DISTANCE && absX < MAX_PERPENDICULAR_DRIFT) {
           hasTriggered = true;
           triggerHaptic(24);
           goToCheckout();
         }
       }, { passive: true });
 
-      document.addEventListener('touchend', () => {
-        startX = null;
-        startY = null;
-        currentX = null;
-        currentY = null;
-        isEdgeSwipe = false;
-        hasTriggered = false;
-      }, { passive: true });
-
-      document.addEventListener('touchcancel', () => {
-        startX = null;
-        startY = null;
-        currentX = null;
-        currentY = null;
-        isEdgeSwipe = false;
-        hasTriggered = false;
-      }, { passive: true });
+      document.addEventListener('touchend', resetGesture, { passive: true });
+      document.addEventListener('touchcancel', resetGesture, { passive: true });
     })();
   </script>
 </body>
