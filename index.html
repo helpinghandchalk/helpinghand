@@ -34,8 +34,8 @@
       --muted: rgba(22, 22, 22, 0.72);
       --faint: rgba(22, 22, 22, 0.54);
       --legal-width: 520px;
-      --desktop-product-center-y: 52%;
       --desktop-copy-gap: 56px;
+      --desktop-column-max: 760px;
       --desktop-sticker-width: clamp(3.2rem, 5vw, 5.2rem);
     }
 
@@ -136,7 +136,7 @@
     .left-copy,
     .right-copy {
       position: absolute;
-      top: var(--desktop-product-center-y);
+      top: 50%;
       transform: translateY(-50%);
       font-size: clamp(1.05rem, 1.2vw, 1.35rem);
       line-height: 1.35;
@@ -147,14 +147,14 @@
     }
 
     .left-copy {
-      left: calc(50% - 380px - var(--desktop-copy-gap));
+      left: calc(50% - (var(--desktop-column-max) / 2) - var(--desktop-copy-gap));
       transform: translate(-100%, -50%);
       text-align: left;
     }
 
     .right-copy {
-      left: calc(50% + 380px + var(--desktop-copy-gap));
-      transform: translate(0, -50%);
+      left: calc(50% + (var(--desktop-column-max) / 2) + var(--desktop-copy-gap));
+      transform: translateY(-50%);
       color: var(--muted);
       text-align: left;
     }
