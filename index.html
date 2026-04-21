@@ -237,7 +237,6 @@
       position: relative;
       z-index: 30;
       pointer-events: auto;
-      touch-action: none;
     }
 
     .product-fallback img {
@@ -508,7 +507,6 @@
               rotation-per-second="3deg"
               camera-controls
               interaction-prompt="none"
-              touch-action="none"
               disable-zoom
               disable-pan
               exposure="1"
@@ -554,14 +552,13 @@
                 onclick="searchTerm('Gotu Kola Leaf')"
                 onkeydown="handleSearchKey(event, 'Gotu Kola Leaf')"
               >Gotu Kola Leaf</span> Powder (10g).
-Apply a small amount to hands as needed to improve grip during climbing or training. 
-Do not ingest. Avoid inhalation and contact with eyes. Keep out of reach of children.
-Use within 3 months of opening for best performance. Plant powder can degrade over time.
-Keep sealed when not in use. Store in a cool, dry place. Keep away from moisture. 
-Discontinue use if irritation occurs. Gotu Kola sourced from shade-grown crops in India. 
-No added colours, additives, or preservatives. Small-batch chalk. Natural variation in texture may occur. 
-May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺ © 2026 Helping Hand Chalk. All rights reserved.
-              
+              Apply a small amount to hands as needed to improve grip during climbing or training.
+              Do not ingest. Avoid inhalation and contact with eyes. Keep out of reach of children.
+              Use within 3 months of opening for best performance. Plant powder can degrade over time.
+              Keep sealed when not in use. Store in a cool, dry place. Keep away from moisture.
+              Discontinue use if irritation occurs. Gotu Kola sourced from shade-grown crops in India.
+              No added colours, additives, or preservatives. Small-batch chalk. Natural variation in texture may occur.
+              May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺ © 2026 Helping Hand Chalk. All rights reserved.
             </p>
           </div>
         </div>
@@ -586,9 +583,9 @@ May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺
     const STRIPE_URL = 'https://buy.stripe.com/cNi3co4DIf2y2Vs1pDcAo00';
 
     function searchTerm(term) {
-  const url = 'https://www.google.com/search?q=' + encodeURIComponent(term) + '&udm=50';
-  window.open(url, '_blank', 'noopener,noreferrer');
-}
+      const url = 'https://www.google.com/search?q=' + encodeURIComponent(term) + '&udm=50';
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
 
     function handleSearchKey(event, term) {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -686,12 +683,12 @@ May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺
     let booted = false;
     let isPointerDown = false;
     let activePointerId = null;
-    let cycleId = 0;
     let returnRaf = null;
-    let resumeRaf = null;
+    let resumeTimeout = null;
+    let fitRaf = null;
+
     let startOrbitSnapshot = null;
     let lastHeldOrbit = null;
-    let fitRaf = null;
 
     function getViewportSize() {
       if (window.visualViewport) {
@@ -725,9 +722,7 @@ May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺
     }
 
     function requestScaleToFit() {
-      if (fitRaf) {
-        cancelAnimationFrame(fitRaf);
-      }
+      if (fitRaf) cancelAnimationFrame(fitRaf);
 
       fitRaf = requestAnimationFrame(() => {
         fitRaf = null;
@@ -735,21 +730,15 @@ May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺
       });
     }
 
-    function stopRotationCompletely() {
-      viewer.autoRotate = false;
-      if (typeof viewer.resetTurntableRotation === 'function') {
-        viewer.resetTurntableRotation(0);
-      }
-    }
-
     function cancelReturnAnimation() {
       if (returnRaf) {
         cancelAnimationFrame(returnRaf);
         returnRaf = null;
       }
-      if (resumeRaf) {
-        cancelAnimationFrame(resumeRaf);
-        resumeRaf = null;
+
+      if (resumeTimeout) {
+        clearTimeout(resumeTimeout);
+        resumeTimeout = null;
       }
     }
 
@@ -792,20 +781,21 @@ May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺
       viewer.scale = START_SCALE;
     }
 
-    function tweenBackToStart(thisCycle, fromOrbit) {
+    function tweenBackToStart(fromOrbit) {
       if (!startOrbitSnapshot || !fromOrbit) return;
+
+      cancelReturnAnimation();
 
       const from = cloneOrbit(fromOrbit);
       const to = cloneOrbit(startOrbitSnapshot);
       const startTime = performance.now();
 
-      viewer.cameraControls = false;
+      viewer.autoRotate = false;
       viewer.jumpCameraToGoal = true;
+      viewer.cameraControls = true;
       setBasePose();
-      stopRotationCompletely();
 
       const step = (now) => {
-        if (thisCycle !== cycleId) return;
         if (isPointerDown) return;
 
         const elapsed = now - startTime;
@@ -825,39 +815,41 @@ May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺
 
         viewer.cameraOrbit = orbitToString(to);
         lastHeldOrbit = cloneOrbit(to);
+        returnRaf = null;
 
-        if (typeof viewer.resetTurntableRotation === 'function') {
-          viewer.resetTurntableRotation(0);
-        }
-
-        resumeRaf = requestAnimationFrame(() => {
-          if (thisCycle !== cycleId) return;
+        resumeTimeout = setTimeout(() => {
+          if (isPointerDown) return;
           viewer.jumpCameraToGoal = false;
           viewer.cameraControls = true;
           viewer.autoRotate = true;
-        });
+        }, 0);
       };
 
       returnRaf = requestAnimationFrame(step);
     }
 
-    function handlePressStart(event) {
+    function beginInteraction(event) {
       if (!booted) return;
 
-      cycleId++;
       cancelReturnAnimation();
 
       isPointerDown = true;
       activePointerId = event.pointerId ?? 'mouse';
 
-      viewer.cameraControls = true;
+      viewer.autoRotate = false;
       viewer.jumpCameraToGoal = false;
-      stopRotationCompletely();
+      viewer.cameraControls = true;
+
+      if (event.pointerId != null && viewer.setPointerCapture) {
+        try {
+          viewer.setPointerCapture(event.pointerId);
+        } catch (_) {}
+      }
 
       lastHeldOrbit = cloneOrbit(getLiveOrbit());
     }
 
-    function handlePressEnd(event) {
+    function endInteraction(event) {
       if (!booted) return;
       if (!isPointerDown) return;
 
@@ -870,19 +862,17 @@ May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺
         return;
       }
 
+      if (event && event.pointerId != null && viewer.releasePointerCapture) {
+        try {
+          viewer.releasePointerCapture(event.pointerId);
+        } catch (_) {}
+      }
+
       isPointerDown = false;
       activePointerId = null;
 
-      const thisCycle = cycleId;
       const releaseOrbit = cloneOrbit(lastHeldOrbit || getLiveOrbit());
-
-      cancelReturnAnimation();
-
-      requestAnimationFrame(() => {
-        if (thisCycle !== cycleId) return;
-        if (isPointerDown) return;
-        tweenBackToStart(thisCycle, releaseOrbit);
-      });
+      tweenBackToStart(releaseOrbit);
     }
 
     viewer.addEventListener('camera-change', () => {
@@ -891,9 +881,12 @@ May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺
       lastHeldOrbit = cloneOrbit(getLiveOrbit());
     });
 
-    viewer.addEventListener('load', () => {
-      stopRotationCompletely();
+    viewer.addEventListener('load', async () => {
+      await viewer.updateComplete;
+
+      viewer.autoRotate = false;
       viewer.jumpCameraToGoal = true;
+      viewer.cameraControls = true;
       setBasePose();
       viewer.cameraOrbit = START_ORBIT_DECLARATION;
 
@@ -919,10 +912,14 @@ May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺
       window.visualViewport.addEventListener('scroll', requestScaleToFit);
     }
 
-    viewer.addEventListener('pointerdown', handlePressStart, true);
-    window.addEventListener('pointerup', handlePressEnd, true);
-    window.addEventListener('pointercancel', handlePressEnd, true);
-    window.addEventListener('blur', () => handlePressEnd(), true);
+    viewer.addEventListener('pointerdown', beginInteraction, true);
+    viewer.addEventListener('pointerup', endInteraction, true);
+    viewer.addEventListener('pointercancel', endInteraction, true);
+    viewer.addEventListener('lostpointercapture', endInteraction, true);
+
+    window.addEventListener('pointerup', endInteraction, true);
+    window.addEventListener('pointercancel', endInteraction, true);
+    window.addEventListener('blur', () => endInteraction(), true);
 
     (function setupRightEdgeSwipeCheckout() {
       let startX = null;
