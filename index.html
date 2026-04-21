@@ -27,6 +27,7 @@
   <link rel="preconnect" href="https://js.stripe.com" crossorigin>
 
   <title>Helping Hand</title>
+
   <style>
     :root {
       --bg: #E5E5DB;
@@ -101,10 +102,10 @@
       width: 100vw;
       min-height: 100vh;
       display: grid;
-      grid-template-columns: minmax(160px, 1fr) minmax(760px, 980px) minmax(160px, 1fr);
-      grid-template-rows: 170px 1fr 190px;
+      grid-template-columns: minmax(160px, 1fr) minmax(520px, 860px) minmax(160px, 1fr);
+      grid-template-rows: 190px 1fr 170px;
       gap: 0;
-      padding: 1.5rem 3.25rem 1.4rem;
+      padding: 1.2rem 3.6rem 1.75rem;
       align-items: start;
       position: relative;
       overflow: visible;
@@ -117,14 +118,14 @@
       grid-row: 1;
       justify-self: center;
       align-self: start;
-      margin-top: 0.1rem;
+      margin-top: 1.35rem;
       position: relative;
       z-index: 2;
     }
 
     .logo-wrap img {
       display: block;
-      width: min(31vw, 470px);
+      width: min(34vw, 540px);
       max-width: 100%;
       height: auto;
       pointer-events: none;
@@ -134,8 +135,8 @@
     .left-copy,
     .right-copy {
       align-self: center;
-      font-size: clamp(1rem, 1.22vw, 1.3rem);
-      line-height: 1.38;
+      font-size: clamp(1.05rem, 1.18vw, 1.35rem);
+      line-height: 1.35;
       letter-spacing: -0.02em;
       position: relative;
       z-index: 2;
@@ -146,18 +147,16 @@
       grid-column: 1;
       grid-row: 2;
       justify-self: start;
-      align-self: center;
-      margin-left: 3.8rem;
-      margin-top: -1.2rem;
+      margin-left: 2.4rem;
+      margin-top: 1.1rem;
     }
 
     .right-copy {
       grid-column: 3;
       grid-row: 2;
       justify-self: end;
-      align-self: center;
-      margin-right: 3.8rem;
-      margin-top: -0.35rem;
+      margin-right: 2.4rem;
+      margin-top: 1.15rem;
       color: var(--muted);
       text-align: left;
     }
@@ -175,7 +174,7 @@
     .care-line {
       display: flex;
       align-items: center;
-      gap: 0.58rem;
+      gap: 0.6rem;
       white-space: nowrap;
     }
 
@@ -185,17 +184,17 @@
 
     .care-mark {
       display: inline-block;
-      height: 2.85rem;
+      height: 2.9rem;
       width: auto;
       object-fit: contain;
-      transform: rotate(-2deg) translateY(0.02em);
+      transform: rotate(-2deg) translateY(0.04em);
       pointer-events: none;
       -webkit-user-drag: none;
     }
 
     .center-stage {
       grid-column: 2;
-      grid-row: 2 / 4;
+      grid-row: 2;
       display: grid;
       justify-items: center;
       align-content: start;
@@ -204,24 +203,23 @@
       position: relative;
       overflow: visible;
       z-index: 10;
-      margin-top: 0;
+      margin-top: 0.35rem;
     }
 
     .product-shell {
-      width: min(100%, 980px);
+      width: min(100%, 860px);
       display: grid;
       justify-items: center;
       gap: 0;
       position: relative;
       overflow: visible;
       z-index: 10;
-      padding-top: 0.55rem;
     }
 
     .product-stage {
       position: relative;
-      width: 760px;
-      height: 520px;
+      width: 640px;
+      height: 470px;
       overflow: visible;
       z-index: 20;
       pointer-events: none;
@@ -232,9 +230,9 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      transform: translate(-50%, -53%);
-      width: 980px;
-      height: 760px;
+      transform: translate(-50%, -56%);
+      width: 900px;
+      height: 720px;
       background: transparent;
       display: block;
       overflow: visible;
@@ -259,9 +257,9 @@
 
     .price {
       position: absolute;
-      left: 62%;
-      top: 84.5%;
-      transform: translateX(-50%);
+      left: 72%;
+      top: 97%;
+      transform: translate(-50%, 0);
       user-select: none;
       z-index: 60;
       margin: 0;
@@ -289,7 +287,7 @@
 
     .price img {
       display: block;
-      width: clamp(3.6rem, 4.5vw, 4.9rem);
+      width: clamp(3.2rem, 5vw, 5.1rem);
       height: auto;
       object-fit: contain;
       transform: rotate(-5deg);
@@ -301,15 +299,17 @@
       width: min(100%, var(--legal-width));
       color: var(--faint);
       font-size: 0.74rem;
-      line-height: 1.25;
-      letter-spacing: 0.015em;
+      line-height: 1.27;
+      letter-spacing: 0.012em;
       text-transform: uppercase;
       position: absolute;
       left: 50%;
-      bottom: 1.15rem;
+      bottom: -6.15rem;
       transform: translateX(-50%);
       z-index: 3;
-      text-align: left;
+      text-align: justify;
+      text-align-last: justify;
+      text-justify: inter-word;
       hyphens: none;
       -webkit-hyphens: none;
       -ms-hyphens: none;
@@ -317,6 +317,12 @@
 
     .legal p {
       margin: 0;
+    }
+
+    .legal p::after {
+      content: "";
+      display: inline-block;
+      width: 100%;
     }
 
     a,
@@ -459,15 +465,8 @@
         padding: 0;
         position: static;
         transform: none;
-        text-align: justify;
-        text-align-last: justify;
-        text-justify: inter-word;
-      }
-
-      .legal p::after {
-        content: "";
-        display: inline-block;
-        width: 100%;
+        bottom: auto;
+        left: auto;
       }
 
       .right-copy {
@@ -487,6 +486,7 @@
       }
     }
   </style>
+
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
@@ -567,12 +567,12 @@
                 onclick="searchTerm('Gotu Kola Leaf')"
                 onkeydown="handleSearchKey(event, 'Gotu Kola Leaf')"
               >Gotu Kola Leaf</span> Powder (10g).
-Apply a small amount to hands as needed to improve grip during climbing or training. 
+Apply a small amount to hands as needed to improve grip during climbing or training.
 Do not ingest. Avoid inhalation and contact with eyes. Keep out of reach of children.
 Use within 3 months of opening for best performance. Plant powder can degrade over time.
-Keep sealed when not in use. Store in a cool, dry place. Keep away from moisture. 
-Discontinue use if irritation occurs. Gotu Kola sourced from shade-grown crops in India. 
-No added colours, additives, or preservatives. Small-batch chalk. Natural variation in texture may occur. 
+Keep sealed when not in use. Store in a cool, dry place. Keep away from moisture.
+Discontinue use if irritation occurs. Gotu Kola sourced from shade-grown crops in India.
+No added colours, additives, or preservatives. Small-batch chalk. Natural variation in texture may occur.
 May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺ © 2026 Helping Hand Chalk. All rights reserved.
             </p>
           </div>
