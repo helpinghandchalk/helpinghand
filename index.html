@@ -34,6 +34,7 @@
       --muted: rgba(22, 22, 22, 0.72);
       --faint: rgba(22, 22, 22, 0.54);
       --legal-width: 520px;
+      --desktop-product-center-y: 52%;
     }
 
     * {
@@ -115,14 +116,15 @@
     .logo-wrap {
       grid-column: 2;
       justify-self: center;
-      margin-top: 1.45rem; /* moved down */
+      margin-top: 1.45rem;
       position: relative;
       z-index: 2;
+      width: min(100%, var(--legal-width)); /* aligns logo edges to legal text */
     }
 
     .logo-wrap img {
       display: block;
-      width: min(35vw, 540px); /* enlarged slightly */
+      width: 100%;
       max-width: 100%;
       height: auto;
       pointer-events: none;
@@ -131,27 +133,24 @@
 
     .left-copy,
     .right-copy {
-      align-self: center;
+      position: absolute;
+      top: var(--desktop-product-center-y);
+      transform: translateY(-50%);
       font-size: clamp(1.05rem, 1.2vw, 1.35rem);
       line-height: 1.35;
       letter-spacing: -0.02em;
-      position: relative;
       z-index: 2;
-      margin-top: 2.5rem;
+      margin: 0;
+      align-self: auto;
     }
 
     .left-copy {
-      grid-column: 1;
-      grid-row: 2;
-      justify-self: start;
-      margin-left: 2.5rem;
+      left: 6rem;
+      text-align: left;
     }
 
     .right-copy {
-      grid-column: 3;
-      grid-row: 2;
-      justify-self: end;
-      margin-right: 2.5rem;
+      right: 6rem;
       color: var(--muted);
       text-align: left;
     }
@@ -209,7 +208,7 @@
       position: relative;
       overflow: visible;
       z-index: 10;
-      padding-bottom: 11.25rem; /* space reserved for legal text on desktop */
+      padding-bottom: 11.25rem;
     }
 
     .product-stage {
@@ -438,6 +437,10 @@
         font-size: clamp(1rem, 5vw, 1.45rem);
         line-height: 1.28;
         text-align: left;
+        position: static;
+        top: auto;
+        left: auto;
+        transform: none;
       }
 
       .left-copy p {
@@ -475,6 +478,10 @@
         font-size: clamp(0.95rem, 4.8vw, 1.2rem);
         text-align: left;
         color: var(--muted);
+        position: static;
+        top: auto;
+        right: auto;
+        transform: none;
       }
 
       .right-copy p {
@@ -562,12 +569,12 @@
                 onclick="searchTerm('Gotu Kola Leaf')"
                 onkeydown="handleSearchKey(event, 'Gotu Kola Leaf')"
               >Gotu Kola Leaf</span> Powder (10g).
-Apply a small amount to hands as needed to improve grip during climbing or training. 
+Apply a small amount to hands as needed to improve grip during climbing or training.
 Do not ingest. Avoid inhalation and contact with eyes. Keep out of reach of children.
 Use within 3 months of opening for best performance. Plant powder can degrade over time.
-Keep sealed when not in use. Store in a cool, dry place. Keep away from moisture. 
-Discontinue use if irritation occurs. Gotu Kola sourced from shade-grown crops in India. 
-No added colours, additives, or preservatives. Small-batch chalk. Natural variation in texture may occur. 
+Keep sealed when not in use. Store in a cool, dry place. Keep away from moisture.
+Discontinue use if irritation occurs. Gotu Kola sourced from shade-grown crops in India.
+No added colours, additives, or preservatives. Small-batch chalk. Natural variation in texture may occur.
 May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺ © 2026 Helping Hand Chalk. All rights reserved.
             </p>
           </div>
