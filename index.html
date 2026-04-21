@@ -586,9 +586,9 @@ May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺
     const STRIPE_URL = 'https://buy.stripe.com/cNi3co4DIf2y2Vs1pDcAo00';
 
     function searchTerm(term) {
-      const url = 'https://www.google.com/search?q=' + encodeURIComponent(term);
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
+  const url = 'https://www.google.com/search?q=' + encodeURIComponent(term) + '&udm=50';
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
 
     function handleSearchKey(event, term) {
       if (event.key === 'Enter' || event.key === ' ') {
