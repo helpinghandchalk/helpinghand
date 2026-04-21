@@ -33,16 +33,10 @@
       --text: #161616;
       --muted: rgba(22, 22, 22, 0.72);
       --faint: rgba(22, 22, 22, 0.54);
-
       --legal-width: 520px;
-
-      /* desktop layout controls */
       --desktop-product-center-y: 52%;
-      --desktop-product-shell-width: 560px;
-      --desktop-product-half-width: 280px;
-      --desktop-copy-gap: 72px;
-      --desktop-left-copy-width: 220px;
-      --desktop-right-copy-width: 230px;
+      --desktop-copy-gap: 56px;
+      --desktop-sticker-width: clamp(3.2rem, 5vw, 5.2rem);
     }
 
     * {
@@ -152,16 +146,15 @@
       align-self: auto;
     }
 
-    /* Fixed gap from product on desktop */
     .left-copy {
-      width: var(--desktop-left-copy-width);
-      right: calc(50% + var(--desktop-product-half-width) + var(--desktop-copy-gap));
+      left: calc(50% - 380px - var(--desktop-copy-gap));
+      transform: translate(-100%, -50%);
       text-align: left;
     }
 
     .right-copy {
-      width: var(--desktop-right-copy-width);
-      left: calc(50% + var(--desktop-product-half-width) + var(--desktop-copy-gap));
+      left: calc(50% + 380px + var(--desktop-copy-gap));
+      transform: translate(0, -50%);
       color: var(--muted);
       text-align: left;
     }
@@ -212,7 +205,7 @@
     }
 
     .product-shell {
-      width: min(100%, var(--desktop-product-shell-width));
+      width: min(100%, 560px);
       display: grid;
       justify-items: center;
       gap: 1rem;
@@ -261,12 +254,11 @@
       -webkit-user-drag: none;
     }
 
-    /* Desktop: sticker aligned to right vertical of legal text */
     .price {
       position: absolute;
-      left: calc(50% + (var(--legal-width) / 2));
-      top: 75.6%;
-      transform: translate(-14%, 0);
+      right: calc(50% - (var(--legal-width) / 2));
+      top: 79%;
+      transform: translateX(100%);
       user-select: none;
       z-index: 60;
       margin: 0;
@@ -294,7 +286,7 @@
 
     .price img {
       display: block;
-      width: clamp(3.35rem, 5vw, 5.25rem);
+      width: var(--desktop-sticker-width);
       height: auto;
       object-fit: contain;
       transform: rotate(-5deg);
@@ -451,7 +443,7 @@
         text-align: left;
         position: static;
         top: auto;
-        right: auto;
+        left: auto;
         transform: none;
       }
 
@@ -492,6 +484,7 @@
         color: var(--muted);
         position: static;
         top: auto;
+        right: auto;
         left: auto;
         transform: none;
       }
