@@ -33,8 +33,16 @@
       --text: #161616;
       --muted: rgba(22, 22, 22, 0.72);
       --faint: rgba(22, 22, 22, 0.54);
+
       --legal-width: 520px;
+
+      /* desktop layout controls */
       --desktop-product-center-y: 52%;
+      --desktop-product-shell-width: 560px;
+      --desktop-product-half-width: 280px;
+      --desktop-copy-gap: 72px;
+      --desktop-left-copy-width: 220px;
+      --desktop-right-copy-width: 230px;
     }
 
     * {
@@ -119,7 +127,7 @@
       margin-top: 1.45rem;
       position: relative;
       z-index: 2;
-      width: min(100%, var(--legal-width)); /* aligns logo edges to legal text */
+      width: min(100%, var(--legal-width));
     }
 
     .logo-wrap img {
@@ -144,13 +152,16 @@
       align-self: auto;
     }
 
+    /* Fixed gap from product on desktop */
     .left-copy {
-      left: 6rem;
+      width: var(--desktop-left-copy-width);
+      right: calc(50% + var(--desktop-product-half-width) + var(--desktop-copy-gap));
       text-align: left;
     }
 
     .right-copy {
-      right: 6rem;
+      width: var(--desktop-right-copy-width);
+      left: calc(50% + var(--desktop-product-half-width) + var(--desktop-copy-gap));
       color: var(--muted);
       text-align: left;
     }
@@ -201,7 +212,7 @@
     }
 
     .product-shell {
-      width: min(100%, 560px);
+      width: min(100%, var(--desktop-product-shell-width));
       display: grid;
       justify-items: center;
       gap: 1rem;
@@ -250,11 +261,12 @@
       -webkit-user-drag: none;
     }
 
+    /* Desktop: sticker aligned to right vertical of legal text */
     .price {
       position: absolute;
-      left: 74%;
-      top: 79%;
-      transform: translate(-50%, 0);
+      left: calc(50% + (var(--legal-width) / 2));
+      top: 75.6%;
+      transform: translate(-14%, 0);
       user-select: none;
       z-index: 60;
       margin: 0;
@@ -282,7 +294,7 @@
 
     .price img {
       display: block;
-      width: clamp(3.2rem, 5vw, 5.2rem);
+      width: clamp(3.35rem, 5vw, 5.25rem);
       height: auto;
       object-fit: contain;
       transform: rotate(-5deg);
@@ -439,7 +451,7 @@
         text-align: left;
         position: static;
         top: auto;
-        left: auto;
+        right: auto;
         transform: none;
       }
 
@@ -480,7 +492,7 @@
         color: var(--muted);
         position: static;
         top: auto;
-        right: auto;
+        left: auto;
         transform: none;
       }
 
