@@ -135,8 +135,11 @@
 
     .left-copy,
     .right-copy {
+      grid-row: 2;
       align-self: center;
       justify-self: center;
+      width: max-content;
+      max-width: 100%;
       font-size: clamp(1.05rem, 1.2vw, 1.35rem);
       line-height: 1.35;
       letter-spacing: -0.02em;
@@ -151,13 +154,11 @@
 
     .left-copy {
       grid-column: 1;
-      grid-row: 2;
       text-align: left;
     }
 
     .right-copy {
       grid-column: 3;
-      grid-row: 2;
       color: var(--muted);
       text-align: left;
     }
