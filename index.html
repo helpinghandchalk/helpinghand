@@ -103,7 +103,7 @@
       min-height: 100vh;
       display: grid;
       grid-template-columns: minmax(120px, 1fr) minmax(360px, 760px) minmax(120px, 1fr);
-      grid-template-rows: auto auto 1fr;
+      grid-template-rows: auto 1fr auto 1fr;
       gap: 0;
       padding: 2.5rem 3.5rem 2rem;
       align-items: start;
@@ -135,7 +135,7 @@
 
     .left-copy,
     .right-copy {
-      grid-row: 2;
+      grid-row: 3;
       align-self: center;
       justify-self: center;
       width: max-content;
@@ -196,7 +196,7 @@
 
     .center-stage {
       grid-column: 2;
-      grid-row: 2;
+      grid-row: 3;
       display: grid;
       justify-items: center;
       align-content: center;
@@ -297,7 +297,7 @@
 
     .legal {
       grid-column: 2;
-      grid-row: 3;
+      grid-row: 4;
       justify-self: center;
       align-self: end;
       text-align: justify;
