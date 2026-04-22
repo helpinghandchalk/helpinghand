@@ -103,8 +103,8 @@
       min-height: 100vh;
       display: grid;
       grid-template-columns: minmax(120px, 1fr) minmax(360px, 760px) minmax(120px, 1fr);
-      grid-template-rows: auto 1fr auto;
-      gap: 2rem;
+      grid-template-rows: auto auto 1fr;
+      gap: 0;
       padding: 2.5rem 3.5rem 2rem;
       align-items: start;
       position: relative;
@@ -200,29 +200,26 @@
       display: grid;
       justify-items: center;
       align-content: center;
-      gap: 1.4rem;
-      min-height: 100%;
+      min-height: 0;
       position: relative;
       overflow: visible;
       z-index: 10;
-      margin-top: 2.9rem;
+      margin-top: 0;
     }
 
     .product-shell {
       width: min(100%, 560px);
       display: grid;
       justify-items: center;
-      gap: 1rem;
       position: relative;
       overflow: visible;
       z-index: 10;
-      padding-bottom: 11.25rem;
     }
 
     .product-stage {
       position: relative;
       width: 560px;
-      height: 620px;
+      height: 360px;
       overflow: visible;
       z-index: 20;
       pointer-events: none;
@@ -233,7 +230,7 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      transform: translate(-50%, -60%);
+      transform: translate(-50%, -52%);
       width: 980px;
       height: 820px;
       background: transparent;
@@ -260,9 +257,9 @@
 
     .price {
       position: absolute;
-      right: calc(50% - (var(--legal-width) / 2));
-      top: 79%;
-      transform: translateX(100%);
+      right: -1.8rem;
+      bottom: -2.8rem;
+      transform: none;
       user-select: none;
       z-index: 60;
       margin: 0;
@@ -299,10 +296,10 @@
     }
 
     .legal {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
+      grid-column: 2;
+      grid-row: 3;
+      justify-self: center;
+      align-self: end;
       text-align: justify;
       text-align-last: justify;
       text-justify: inter-word;
@@ -312,11 +309,15 @@
       line-height: 1.28;
       letter-spacing: 0.01em;
       text-transform: uppercase;
-      margin-top: 0;
+      margin-top: 3rem;
       z-index: 3;
       hyphens: none;
       -webkit-hyphens: none;
       -ms-hyphens: none;
+      position: relative;
+      left: auto;
+      bottom: auto;
+      transform: none;
     }
 
     .legal p {
@@ -366,7 +367,8 @@
       .logo-wrap,
       .left-copy,
       .center-stage,
-      .right-copy {
+      .right-copy,
+      .legal {
         grid-column: 1;
         margin: 0;
         width: 100%;
@@ -386,16 +388,20 @@
       }
 
       .center-stage {
-        display: contents;
+        grid-area: product;
+        display: grid;
+        justify-items: center;
+        align-content: start;
       }
 
       .product-shell {
-        display: contents;
+        width: 100%;
+        display: grid;
+        justify-items: center;
         padding-bottom: 0;
       }
 
       .product-stage {
-        grid-area: product;
         justify-self: center;
         align-self: start;
         width: 100%;
@@ -418,13 +424,10 @@
       }
 
       .price {
-        grid-area: product;
-        position: relative;
-        justify-self: end;
-        align-self: end;
+        position: absolute;
         right: calc((100% - min(100%, var(--legal-width))) / 2);
-        left: auto;
         bottom: 0.35rem;
+        left: auto;
         top: auto;
         transform: none;
         margin: 0;
@@ -566,27 +569,6 @@
               <img src="£12.png" alt="£12" draggable="false" />
             </div>
           </div>
-
-          <div class="legal">
-            <p>
-              Net wt. 70 grams. Ingredients : Magnesium Carbonate (60g),
-              <span
-                class="search-link"
-                role="link"
-                tabindex="0"
-                aria-label="Search for Gotu Kola Leaf"
-                onclick="searchTerm('Gotu Kola Leaf')"
-                onkeydown="handleSearchKey(event, 'Gotu Kola Leaf')"
-              >Gotu Kola Leaf</span> Powder (10g).
-Apply a small amount to hands as needed to improve grip during climbing or training.
-Do not ingest. Avoid inhalation and contact with eyes. Keep out of reach of children.
-Use within 3 months of opening for best performance. Plant powder can degrade over time.
-Keep sealed when not in use. Store in a cool, dry place. Keep away from moisture.
-Discontinue use if irritation occurs. Gotu Kola sourced from shade-grown crops in India.
-No added colours, additives, or preservatives. Small-batch chalk. Natural variation in texture may occur.
-May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺ © 2026 Helping Hand Chalk. All rights reserved.
-            </p>
-          </div>
         </div>
       </section>
 
@@ -602,6 +584,27 @@ May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺
           >osh@helpinghandchalk.co.uk</span>
         </p>
       </aside>
+
+      <div class="legal">
+        <p>
+          Net wt. 70 grams. Ingredients : Magnesium Carbonate (60g),
+          <span
+            class="search-link"
+            role="link"
+            tabindex="0"
+            aria-label="Search for Gotu Kola Leaf"
+            onclick="searchTerm('Gotu Kola Leaf')"
+            onkeydown="handleSearchKey(event, 'Gotu Kola Leaf')"
+          >Gotu Kola Leaf</span> Powder (10g).
+          Apply a small amount to hands as needed to improve grip during climbing or training.
+          Do not ingest. Avoid inhalation and contact with eyes. Keep out of reach of children.
+          Use within 3 months of opening for best performance. Plant powder can degrade over time.
+          Keep sealed when not in use. Store in a cool, dry place. Keep away from moisture.
+          Discontinue use if irritation occurs. Gotu Kola sourced from shade-grown crops in India.
+          No added colours, additives, or preservatives. Small-batch chalk. Natural variation in texture may occur.
+          May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺ © 2026 Helping Hand Chalk. All rights reserved.
+        </p>
+      </div>
     </main>
   </div>
 
