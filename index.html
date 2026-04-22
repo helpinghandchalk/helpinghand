@@ -35,6 +35,7 @@
       --faint: rgba(22, 22, 22, 0.54);
       --legal-width: 520px;
       --desktop-sticker-width: clamp(3.2rem, 5vw, 5.2rem);
+      --desktop-side-center-y: 54%;
     }
 
     * {
@@ -102,11 +103,9 @@
       width: 100vw;
       min-height: 100vh;
       display: grid;
-      grid-template-columns: minmax(120px, 1fr) minmax(360px, 760px) minmax(120px, 1fr);
-      grid-template-rows: auto 1fr auto;
-      gap: 2rem;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
       padding: 2.5rem 3.5rem 2rem;
-      align-items: start;
       position: relative;
       overflow: visible;
       transform-origin: top center;
@@ -114,8 +113,6 @@
     }
 
     .logo-wrap {
-      grid-column: 2;
-      grid-row: 1;
       justify-self: center;
       align-self: start;
       margin-top: 1.45rem;
@@ -135,32 +132,27 @@
 
     .left-copy,
     .right-copy {
-      grid-row: 2;
-      align-self: center;
-      justify-self: center;
+      position: absolute;
+      top: var(--desktop-side-center-y);
       width: max-content;
-      max-width: 100%;
+      max-width: calc(25vw - 2rem);
+      transform: translate(-50%, -50%);
       font-size: clamp(1.05rem, 1.2vw, 1.35rem);
       line-height: 1.35;
       letter-spacing: -0.02em;
-      position: relative;
       z-index: 2;
       margin: 0;
-      transform: none;
-      top: auto;
-      left: auto;
-      right: auto;
     }
 
     .left-copy {
-      grid-column: 1;
+      left: calc(25% - (var(--legal-width) / 4));
       text-align: left;
     }
 
     .right-copy {
-      grid-column: 3;
-      color: var(--muted);
+      left: calc(75% + (var(--legal-width) / 4));
       text-align: left;
+      color: var(--muted);
     }
 
     .left-copy p,
@@ -195,17 +187,13 @@
     }
 
     .center-stage {
-      grid-column: 2;
-      grid-row: 2;
+      position: relative;
       display: grid;
       justify-items: center;
       align-content: center;
-      gap: 1.4rem;
       min-height: 100%;
-      position: relative;
-      overflow: visible;
-      z-index: 10;
       margin-top: 2.9rem;
+      z-index: 10;
     }
 
     .product-shell {
@@ -367,9 +355,9 @@
       .left-copy,
       .center-stage,
       .right-copy {
-        grid-column: 1;
         margin: 0;
         width: 100%;
+        max-width: none;
       }
 
       .logo-wrap {
@@ -386,6 +374,7 @@
       }
 
       .center-stage {
+        grid-area: product;
         display: contents;
       }
 
@@ -395,7 +384,6 @@
       }
 
       .product-stage {
-        grid-area: product;
         justify-self: center;
         align-self: start;
         width: 100%;
@@ -418,7 +406,6 @@
       }
 
       .price {
-        grid-area: product;
         position: relative;
         justify-self: end;
         align-self: end;
@@ -438,6 +425,7 @@
 
       .left-copy {
         grid-area: copy;
+        position: static;
         width: min(100%, var(--legal-width));
         justify-self: center;
         margin-top: 0.15rem;
@@ -445,9 +433,6 @@
         font-size: clamp(1rem, 5vw, 1.45rem);
         line-height: 1.28;
         text-align: left;
-        position: static;
-        top: auto;
-        left: auto;
         transform: none;
       }
 
@@ -478,6 +463,7 @@
 
       .right-copy {
         grid-area: contact;
+        position: static;
         width: min(100%, var(--legal-width));
         max-width: none;
         justify-self: center;
@@ -486,10 +472,6 @@
         font-size: clamp(0.95rem, 4.8vw, 1.2rem);
         text-align: left;
         color: var(--muted);
-        position: static;
-        top: auto;
-        right: auto;
-        left: auto;
         transform: none;
       }
 
