@@ -34,8 +34,6 @@
       --muted: rgba(22, 22, 22, 0.72);
       --faint: rgba(22, 22, 22, 0.54);
       --legal-width: 520px;
-      --desktop-copy-gap: 56px;
-      --desktop-column-max: 760px;
       --desktop-sticker-width: clamp(3.2rem, 5vw, 5.2rem);
     }
 
@@ -117,7 +115,9 @@
 
     .logo-wrap {
       grid-column: 2;
+      grid-row: 1;
       justify-self: center;
+      align-self: start;
       margin-top: 1.45rem;
       position: relative;
       z-index: 2;
@@ -135,26 +135,29 @@
 
     .left-copy,
     .right-copy {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
+      align-self: center;
+      justify-self: center;
       font-size: clamp(1.05rem, 1.2vw, 1.35rem);
       line-height: 1.35;
       letter-spacing: -0.02em;
+      position: relative;
       z-index: 2;
       margin: 0;
-      align-self: auto;
+      transform: none;
+      top: auto;
+      left: auto;
+      right: auto;
     }
 
     .left-copy {
-      left: calc(50% - (var(--desktop-column-max) / 2) - var(--desktop-copy-gap));
-      transform: translate(-100%, -50%);
+      grid-column: 1;
+      grid-row: 2;
       text-align: left;
     }
 
     .right-copy {
-      left: calc(50% + (var(--desktop-column-max) / 2) + var(--desktop-copy-gap));
-      transform: translateY(-50%);
+      grid-column: 3;
+      grid-row: 2;
       color: var(--muted);
       text-align: left;
     }
