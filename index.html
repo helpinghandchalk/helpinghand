@@ -7,31 +7,16 @@
       location.hostname === '127.0.0.1';
 
     if (!isLocal && location.protocol !== 'https:') {
-      location.replace(
-        'https://' +
-        location.host +
-        location.pathname +
-        location.search +
-        location.hash
-      );
+      location.replace('https://' + location.host + location.pathname + location.search + location.hash);
     }
   </script>
 
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 
   <title>Helping Hand Chalk – Gotu Kola Climbing Chalk (£12)</title>
-  <meta
-    name="description"
-    content="Helping Hand Chalk is a small-batch climbing chalk with magnesium carbonate and Gotu Kola leaf powder. Made by Osh. 70g. £12."
-  />
-  <meta
-    name="keywords"
-    content="Helping Hand Chalk, Gotu Kola chalk, climbing chalk, magnesium carbonate chalk, bouldering chalk, chalk for climbing, small batch chalk, Osh chalk"
-  />
+  <meta name="description" content="Helping Hand Chalk is a small-batch climbing chalk with magnesium carbonate and Gotu Kola leaf powder. Made by Osh. 70g. £12." />
+  <meta name="keywords" content="Helping Hand Chalk, Gotu Kola chalk, climbing chalk, magnesium carbonate chalk, bouldering chalk, chalk for climbing, small batch chalk, Osh chalk" />
   <meta name="author" content="Helping Hand Chalk" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="googlebot" content="index, follow" />
@@ -43,10 +28,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Helping Hand Chalk" />
   <meta property="og:title" content="Helping Hand Chalk | Gotu Kola Climbing Chalk" />
-  <meta
-    property="og:description"
-    content="Small-batch climbing chalk with magnesium carbonate and Gotu Kola leaf powder. From my hands to yours."
-  />
+  <meta property="og:description" content="Small-batch climbing chalk with magnesium carbonate and Gotu Kola leaf powder. From my hands to yours." />
   <meta property="og:url" content="https://helpinghandchalk.co.uk/" />
   <meta property="og:image" content="https://helpinghandchalk.co.uk/product-poster.png" />
   <meta property="og:image:alt" content="Helping Hand Gotu Kola climbing chalk product" />
@@ -54,10 +36,7 @@
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Helping Hand Chalk | Gotu Kola Climbing Chalk" />
-  <meta
-    name="twitter:description"
-    content="Small-batch climbing chalk with magnesium carbonate and Gotu Kola leaf powder. 70g. £12."
-  />
+  <meta name="twitter:description" content="Small-batch climbing chalk with magnesium carbonate and Gotu Kola leaf powder. 70g. £12." />
   <meta name="twitter:image" content="https://helpinghandchalk.co.uk/product-poster.png" />
 
   <link rel="dns-prefetch" href="//buy.stripe.com">
@@ -81,6 +60,7 @@
       --faint: rgba(22, 22, 22, 0.54);
       --legal-width: 520px;
       --desktop-sticker-width: 5rem;
+      --desktop-middle-shift: 2.25rem;
     }
 
     * {
@@ -186,13 +166,14 @@
       justify-self: center;
       width: max-content;
       max-width: 100%;
-      font-size: clamp(1.05rem, 1.2vw, 1.35rem);
+      font-size: 1.25rem;
       line-height: 1.35;
       letter-spacing: -0.02em;
       position: relative;
       z-index: 2;
       margin: 0;
       text-align: left;
+      transform: translateY(var(--desktop-middle-shift));
     }
 
     .right-copy {
@@ -249,6 +230,7 @@
       overflow: visible;
       z-index: 10;
       margin-top: 0;
+      transform: translateY(var(--desktop-middle-shift));
     }
 
     .product-shell {
@@ -305,10 +287,10 @@
       justify-self: center;
       align-self: center;
       position: relative;
-      transform: none;
       user-select: none;
       z-index: 5;
       margin: 0;
+      transform: translateY(var(--desktop-middle-shift));
     }
 
     .price-click {
@@ -361,6 +343,7 @@
       z-index: 3;
       hyphens: none;
       position: relative;
+      transform: translateY(var(--desktop-middle-shift));
     }
 
     .legal p {
@@ -435,6 +418,7 @@
         display: grid;
         justify-items: center;
         align-content: start;
+        transform: none;
       }
 
       .product-shell {
@@ -494,10 +478,11 @@
         justify-self: center;
         margin-top: 0.15rem;
         padding: 0;
-        font-size: clamp(1rem, 5vw, 1.45rem);
+        font-size: 1.25rem;
         line-height: 1.28;
         text-align: left;
         position: static;
+        transform: none;
       }
 
       .left-copy p {
@@ -603,6 +588,7 @@
 
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
+
 <body>
   <div class="overlay overlay-light" aria-hidden="true"></div>
   <div class="overlay overlay-grain" aria-hidden="true"></div>
