@@ -488,7 +488,7 @@
       cursor: pointer;
     }
 
-    @media (max-width: 1100px) and (orientation: portrait) {
+    @media (max-width: 1100px) {
       .page {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto auto auto auto;
@@ -638,6 +638,37 @@
 
       .right-copy p {
         margin: 0;
+      }
+    }
+
+    @media (max-width: 1100px) and (orientation: landscape) {
+      html,
+      body {
+        height: auto;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        touch-action: pan-y;
+      }
+
+      body {
+        overflow-y: auto;
+      }
+
+      .scale-wrap {
+        position: static;
+        width: 100%;
+        min-height: 100vh;
+        height: auto;
+        overflow: visible;
+        display: block;
+      }
+
+      .page {
+        width: 100vw;
+        min-height: auto;
+        transform: none !important;
+        transform-origin: top center;
       }
     }
   </style>
@@ -910,8 +941,18 @@
       };
     }
 
+    function isMobileLandscape() {
+      return window.innerWidth <= 1100 && window.innerWidth > window.innerHeight;
+    }
+
     function scaleToFit() {
       if (!page) return;
+
+      if (isMobileLandscape()) {
+        page.style.transform = 'none';
+        page.style.transformOrigin = 'top center';
+        return;
+      }
 
       page.style.transform = 'scale(1)';
 
