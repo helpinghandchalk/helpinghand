@@ -708,26 +708,28 @@
 
       <aside class="right-copy" aria-label="Contact">
         <p>
-          <a
+          <span
             class="email-link"
-            href="mailto:osh@helpinghandchalk.co.uk"
+            role="link"
+            tabindex="0"
             aria-label="Email osh@helpinghandchalk.co.uk"
-            onclick="openEmail(event)"
-          >osh@helpinghandchalk.co.uk</a>
+            onclick="openEmail()"
+            onkeydown="handleEmailKey(event)"
+          >osh@helpinghandchalk.co.uk</span>
         </p>
       </aside>
 
       <div class="legal">
         <p>
           Net wt. 70 grams. Ingredients : Magnesium Carbonate (60g),
-          <a
+          <span
             class="search-link"
-            href="https://www.google.com/search?q=Gotu%20Kola%20Leaf&udm=50"
-            target="_blank"
-            rel="noopener noreferrer"
+            role="link"
+            tabindex="0"
             aria-label="Search for Gotu Kola Leaf"
-            onclick="searchTerm(event, 'Gotu Kola Leaf')"
-          >Gotu Kola Leaf</a> Powder (10g).
+            onclick="searchTerm('Gotu Kola Leaf')"
+            onkeydown="handleSearchKey(event, 'Gotu Kola Leaf')"
+          >Gotu Kola Leaf</span> Powder (10g).
           Apply a small amount to hands as needed to improve grip during climbing or training.
           Do not ingest. Avoid inhalation and contact with eyes. Keep out of reach of children.
           Use within 3 months of opening for best performance. Plant powder can degrade over time.
