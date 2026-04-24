@@ -288,6 +288,8 @@
     .left-copy {
       grid-column: 1;
       text-align: left;
+      justify-self: end;
+      margin-right: clamp(2rem, 4vw, 4rem);
     }
 
     .right-copy {
@@ -578,6 +580,7 @@
         width: min(100%, var(--legal-width));
         justify-self: center;
         margin-top: 0.15rem;
+        margin-right: 0;
         padding: 0;
         font-size: clamp(1rem, 5vw, 1.45rem);
         line-height: 1.28;
