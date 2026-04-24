@@ -236,7 +236,7 @@
       min-height: 100vh;
       display: grid;
       grid-template-columns: minmax(120px, 1fr) minmax(360px, 760px) minmax(120px, 1fr);
-      grid-template-rows: auto 0.7fr auto 1.3fr;
+      grid-template-rows: auto 0.7fr auto auto 1.3fr;
       gap: 0;
       padding: 2.5rem 3.5rem 2rem;
       align-items: start;
@@ -266,8 +266,7 @@
       -webkit-user-drag: none;
     }
 
-    .left-copy,
-    .right-copy {
+    .left-copy {
       grid-row: 3;
       align-self: center;
       justify-self: center;
@@ -291,9 +290,19 @@
     }
 
     .right-copy {
-      grid-column: 3;
+      grid-column: 2;
+      grid-row: 5;
+      justify-self: center;
+      align-self: start;
+      width: min(100%, var(--legal-width));
       color: var(--muted);
       text-align: left;
+      font-size: clamp(1.05rem, 1.2vw, 1.35rem);
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+      position: relative;
+      z-index: 3;
+      margin-top: 0.95rem;
     }
 
     .left-copy p,
@@ -389,9 +398,11 @@
     }
 
     .price {
-      position: absolute;
-      right: max(0px, calc((100% - var(--legal-width)) / 2));
-      bottom: -5rem;
+      grid-column: 3;
+      grid-row: 3;
+      justify-self: center;
+      align-self: center;
+      position: relative;
       transform: none;
       user-select: none;
       z-index: 5;
@@ -558,14 +569,17 @@
       }
 
       .price {
-        position: absolute;
-        right: calc((100% - min(100%, var(--legal-width))) / 2);
-        bottom: 0.35rem;
+        grid-area: product;
+        justify-self: end;
+        align-self: end;
+        position: relative;
+        right: auto;
+        bottom: auto;
         left: auto;
         top: auto;
         transform: none;
-        margin: 0;
-        z-index: 5;
+        margin: 0 calc((100% - min(100%, var(--legal-width))) / 2) 0.35rem 0;
+        z-index: 50;
       }
 
       .price img {
@@ -724,17 +738,6 @@
 
       <section class="center-stage" aria-label="Product">
         <div class="product-shell">
-          <div class="price" aria-label="Price">
-            <a
-              class="price-click"
-              href="https://buy.stripe.com/cNi3co4DIf2y2Vs1pDcAo00"
-              aria-label="Buy Helping Hand Gotu Kola Chalk for £12"
-              onclick="handlePriceActivate(event)"
-            >
-              <img src="£12.png" alt="£12" draggable="false" decoding="async" />
-            </a>
-          </div>
-
           <div class="product-stage">
             <model-viewer
               id="productViewer"
@@ -778,18 +781,16 @@
         </div>
       </section>
 
-      <aside class="right-copy" aria-label="Contact">
-        <p>
-          <span
-            class="email-link"
-            role="link"
-            tabindex="0"
-            aria-label="Email osh@helpinghandchalk.co.uk"
-            onclick="openEmail()"
-            onkeydown="handleEmailKey(event)"
-          >osh@helpinghandchalk.co.uk</span>
-        </p>
-      </aside>
+      <div class="price" aria-label="Price">
+        <a
+          class="price-click"
+          href="https://buy.stripe.com/cNi3co4DIf2y2Vs1pDcAo00"
+          aria-label="Buy Helping Hand Gotu Kola Chalk for £12"
+          onclick="handlePriceActivate(event)"
+        >
+          <img src="£12.png" alt="£12" draggable="false" decoding="async" />
+        </a>
+      </div>
 
       <div class="legal">
         <p>
@@ -811,6 +812,19 @@
           May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺ © 2026 Helping Hand Chalk. All rights reserved.
         </p>
       </div>
+
+      <aside class="right-copy" aria-label="Contact">
+        <p>
+          <span
+            class="email-link"
+            role="link"
+            tabindex="0"
+            aria-label="Email osh@helpinghandchalk.co.uk"
+            onclick="openEmail()"
+            onkeydown="handleEmailKey(event)"
+          >osh@helpinghandchalk.co.uk</span>
+        </p>
+      </aside>
 
       <section style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">
         <h2>Climbing Chalk with Gotu Kola</h2>
