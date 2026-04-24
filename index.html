@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <script>
     const isLocal =
@@ -18,58 +18,124 @@
   </script>
 
   <meta charset="UTF-8" />
-
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
   />
 
-  <!-- SEO -->
-  <title>Helping Hand Chalk | Gotu Kola Climbing Chalk by Osh</title>
+  <!-- Primary SEO -->
+  <title>Helping Hand Chalk | Gotu Kola Climbing Chalk</title>
+  <meta
+    name="description"
+    content="Helping Hand Chalk is a small-batch climbing chalk with magnesium carbonate and Gotu Kola leaf powder. Made by Osh. 70g. £12."
+  />
+  <meta
+    name="keywords"
+    content="Helping Hand Chalk, Gotu Kola chalk, climbing chalk, magnesium carbonate chalk, bouldering chalk, chalk for climbing, small batch chalk, Osh chalk"
+  />
+  <meta name="author" content="Helping Hand Chalk" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="theme-color" content="#E5E5DB" />
+  <meta name="format-detection" content="telephone=no" />
 
-  <meta name="description" content="Small-batch climbing chalk made with magnesium carbonate and Gotu Kola leaf powder. Handmade by Osh. 70g recyclable pack for climbing and training." />
-
+  <!-- Replace this canonical URL with your final live domain if different. -->
   <link rel="canonical" href="https://helpinghandchalk.co.uk/" />
-  <meta name="robots" content="index, follow, max-image-preview:large" />
 
-  <!-- Social -->
-  <meta property="og:type" content="product" />
+  <!-- Open Graph / social preview -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Helping Hand Chalk" />
   <meta property="og:title" content="Helping Hand Chalk | Gotu Kola Climbing Chalk" />
-  <meta property="og:description" content="Small-batch climbing chalk made with magnesium carbonate and Gotu Kola leaf powder." />
+  <meta
+    property="og:description"
+    content="Small-batch climbing chalk with magnesium carbonate and Gotu Kola leaf powder. From my hands to yours."
+  />
   <meta property="og:url" content="https://helpinghandchalk.co.uk/" />
   <meta property="og:image" content="https://helpinghandchalk.co.uk/product-poster.png" />
+  <meta property="og:image:alt" content="Helping Hand Gotu Kola climbing chalk product" />
+  <meta property="og:locale" content="en_GB" />
 
+  <!-- Twitter/X preview -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="theme-color" content="#E5E5DB" />
+  <meta name="twitter:title" content="Helping Hand Chalk | Gotu Kola Climbing Chalk" />
+  <meta
+    name="twitter:description"
+    content="Small-batch climbing chalk with magnesium carbonate and Gotu Kola leaf powder. 70g. £12."
+  />
+  <meta name="twitter:image" content="https://helpinghandchalk.co.uk/product-poster.png" />
 
-  <!-- Performance -->
-  <link rel="preload" as="image" href="/logo.png" fetchpriority="high">
-  <link rel="preload" as="image" href="/product-poster.png" fetchpriority="high">
-
+  <!-- Resource hints -->
   <link rel="dns-prefetch" href="//buy.stripe.com">
+  <link rel="dns-prefetch" href="//js.stripe.com">
+  <link rel="dns-prefetch" href="//unpkg.com">
   <link rel="preconnect" href="https://buy.stripe.com" crossorigin>
   <link rel="preconnect" href="https://js.stripe.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
 
-  <!-- Structured Data -->
+  <!-- Preload critical local assets without changing layout -->
+  <link rel="preload" href="logo.png" as="image" fetchpriority="high">
+  <link rel="preload" href="product-poster.png" as="image" fetchpriority="high">
+  <link rel="preload" href="CARE.png" as="image">
+  <link rel="preload" href="£12.png" as="image">
+  <link rel="preload" href="product.glb" as="fetch" type="model/gltf-binary" crossorigin>
+
+  <!-- Structured data for Google-rich understanding -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "Helping Hand Gotu Kola Climbing Chalk",
-    "brand": {"@type": "Brand", "name": "Helping Hand Chalk"},
-    "description": "Small-batch climbing chalk made with magnesium carbonate and Gotu Kola leaf powder. 70g.",
-    "image": ["https://helpinghandchalk.co.uk/product-poster.png"],
-    "offers": {
-      "@type": "Offer",
-      "price": "12.00",
-      "priceCurrency": "GBP",
-      "availability": "https://schema.org/InStock"
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://helpinghandchalk.co.uk/#organization",
+          "name": "Helping Hand Chalk",
+          "url": "https://helpinghandchalk.co.uk/",
+          "email": "osh@helpinghandchalk.co.uk",
+          "logo": "https://helpinghandchalk.co.uk/logo.png"
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://helpinghandchalk.co.uk/#website",
+          "url": "https://helpinghandchalk.co.uk/",
+          "name": "Helping Hand Chalk",
+          "publisher": {
+            "@id": "https://helpinghandchalk.co.uk/#organization"
+          },
+          "inLanguage": "en-GB"
+        },
+        {
+          "@type": "Product",
+          "@id": "https://helpinghandchalk.co.uk/#product",
+          "name": "Helping Hand Gotu Kola Chalk",
+          "brand": {
+            "@type": "Brand",
+            "name": "Helping Hand Chalk"
+          },
+          "description": "Small-batch climbing chalk made with magnesium carbonate and Gotu Kola leaf powder. Net weight 70 grams.",
+          "image": [
+            "https://helpinghandchalk.co.uk/product-poster.png",
+            "https://helpinghandchalk.co.uk/logo.png"
+          ],
+          "category": "Climbing Chalk",
+          "material": "Magnesium Carbonate, Gotu Kola Leaf Powder",
+          "weight": {
+            "@type": "QuantitativeValue",
+            "value": 70,
+            "unitCode": "GRM"
+          },
+          "offers": {
+            "@type": "Offer",
+            "url": "https://buy.stripe.com/cNi3co4DIf2y2Vs1pDcAo00",
+            "price": "12.00",
+            "priceCurrency": "GBP",
+            "availability": "https://schema.org/InStock",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        }
+      ]
     }
-  }
   </script>
 
   <style>
-    /* your original CSS unchanged */
     :root {
       --bg: #E5E5DB;
       --text: #161616;
@@ -81,112 +147,1044 @@
 
     * {
       box-sizing: border-box;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
     }
 
     html, body {
       margin: 0;
       width: 100%;
       height: 100%;
+      min-height: 100%;
       background: var(--bg);
       color: var(--text);
       font-family: Arial, Helvetica, sans-serif;
+      touch-action: none;
+      overscroll-behavior: none;
       overflow: hidden;
     }
 
-    /* 🔒 KEEP ALL YOUR EXISTING CSS BELOW UNCHANGED */
-    /* (I’ve truncated here for readability — keep yours exactly as-is) */
-
-    /* ADD THIS ONLY */
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      margin: -1px;
+    body {
+      min-height: 100vh;
       overflow: hidden;
-      clip-path: inset(50%);
+    }
+
+    .scale-wrap {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .overlay-light {
+      background:
+        radial-gradient(circle at 50% 38%, rgba(255,255,255,0.06), transparent 42%),
+        radial-gradient(circle at 50% 55%, rgba(0,0,0,0.035), transparent 72%);
+      mix-blend-mode: soft-light;
+    }
+
+    .overlay-grain {
+      opacity: 0.045;
+      background-image:
+        repeating-radial-gradient(circle at 0 0, transparent 0, rgba(0,0,0,0.2) 1px, transparent 2px),
+        repeating-radial-gradient(circle at 100% 100%, transparent 0, rgba(255,255,255,0.15) 1px, transparent 2px);
+      background-size: 180px 180px;
+      mix-blend-mode: multiply;
+    }
+
+    .page {
+      width: 100vw;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(120px, 1fr) minmax(360px, 760px) minmax(120px, 1fr);
+      grid-template-rows: auto 0.7fr auto 1.3fr;
+      gap: 0;
+      padding: 2.5rem 3.5rem 2rem;
+      align-items: start;
+      position: relative;
+      overflow: visible;
+      transform-origin: top center;
+      will-change: transform;
+    }
+
+    .logo-wrap {
+      grid-column: 2;
+      grid-row: 1;
+      justify-self: center;
+      align-self: start;
+      margin-top: 1.45rem;
+      position: relative;
+      z-index: 2;
+      width: min(100%, var(--legal-width));
+    }
+
+    .logo-wrap img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      pointer-events: none;
+      -webkit-user-drag: none;
+    }
+
+    .left-copy,
+    .right-copy {
+      grid-row: 3;
+      align-self: center;
+      justify-self: center;
+      width: max-content;
+      max-width: 100%;
+      font-size: clamp(1.05rem, 1.2vw, 1.35rem);
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+      position: relative;
+      z-index: 2;
+      margin: 0;
+      transform: none;
+      top: auto;
+      left: auto;
+      right: auto;
+    }
+
+    .left-copy {
+      grid-column: 1;
+      text-align: left;
+    }
+
+    .right-copy {
+      grid-column: 3;
+      color: var(--muted);
+      text-align: left;
+    }
+
+    .left-copy p,
+    .right-copy p {
+      margin: 0 0 1rem;
+    }
+
+    .left-copy p:last-child,
+    .right-copy p:last-child {
+      margin-bottom: 0;
+    }
+
+    .care-line {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
       white-space: nowrap;
-      border: 0;
+    }
+
+    .care-line .typed {
+      font-size: inherit;
+    }
+
+    .care-mark {
+      display: inline-block;
+      height: 2.9rem;
+      width: auto;
+      object-fit: contain;
+      transform: rotate(-2deg) translateY(0.04em);
+      pointer-events: none;
+      -webkit-user-drag: none;
+    }
+
+    .center-stage {
+      grid-column: 2;
+      grid-row: 3;
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      min-height: 0;
+      position: relative;
+      overflow: visible;
+      z-index: 10;
+      margin-top: 0;
+    }
+
+    .product-shell {
+      width: min(100%, 560px);
+      display: grid;
+      justify-items: center;
+      position: relative;
+      overflow: visible;
+      z-index: 10;
+    }
+
+    .product-stage {
+      position: relative;
+      width: 560px;
+      height: 360px;
+      overflow: visible;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .product-stage model-viewer,
+    .product-fallback {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -52%);
+      width: 980px;
+      height: 820px;
+      background: transparent;
+      display: block;
+      overflow: visible;
+    }
+
+    model-viewer {
+      position: relative;
+      z-index: 40;
+      pointer-events: auto;
+      touch-action: none;
+      cursor: pointer;
+    }
+
+    .product-fallback img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      pointer-events: none;
+      -webkit-user-drag: none;
+    }
+
+    .price {
+      position: absolute;
+      right: max(0px, calc((100% - var(--legal-width)) / 2));
+      bottom: -2.8rem;
+      transform: none;
+      user-select: none;
+      z-index: 5;
+      margin: 0;
+    }
+
+    .price-click {
+      display: inline-block;
+      text-decoration: none;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 160ms ease;
+      outline: none;
+    }
+
+    .price-click:active {
+      transform: scale(0.96);
+    }
+
+    .price-click:focus-visible {
+      outline: 2px solid rgba(22, 22, 22, 0.55);
+      outline-offset: 0.2rem;
+      border-radius: 0.3rem;
+    }
+
+    .price img {
+      display: block;
+      width: var(--desktop-sticker-width);
+      height: auto;
+      object-fit: contain;
+      transform: rotate(-5deg);
+      pointer-events: none;
+      -webkit-user-drag: none;
+    }
+
+    .legal {
+      grid-column: 2;
+      grid-row: 4;
+      justify-self: center;
+      align-self: end;
+      text-align: justify;
+      text-align-last: justify;
+      text-justify: inter-word;
+      width: min(100%, var(--legal-width));
+      color: var(--faint);
+      font-size: 0.78rem;
+      line-height: 1.28;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      margin-top: 3rem;
+      z-index: 3;
+      hyphens: none;
+      -webkit-hyphens: none;
+      -ms-hyphens: none;
+      position: relative;
+      left: auto;
+      bottom: auto;
+      transform: none;
+    }
+
+    .legal p {
+      margin: 0;
+    }
+
+    .legal p::after {
+      content: "";
+      display: inline-block;
+      width: 100%;
+    }
+
+    a,
+    .search-link,
+    .email-link {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:hover,
+    .search-link:hover,
+    .email-link:hover {
+      text-decoration: underline;
+      text-underline-offset: 0.12em;
+    }
+
+    .search-link,
+    .email-link {
+      cursor: pointer;
+    }
+
+    @media (max-width: 1100px) {
+      .page {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto;
+        grid-template-areas:
+          "logo"
+          "product"
+          "copy"
+          "legal"
+          "contact";
+        padding: 1.2rem 1rem 1.1rem;
+        gap: 0;
+        min-height: 100vh;
+      }
+
+      .logo-wrap,
+      .left-copy,
+      .center-stage,
+      .right-copy,
+      .legal {
+        grid-column: 1;
+        margin: 0;
+        width: 100%;
+      }
+
+      .logo-wrap {
+        grid-area: logo;
+        justify-self: center;
+        width: min(100%, var(--legal-width));
+        margin-top: 0.1rem;
+        margin-bottom: 0.35rem;
+      }
+
+      .logo-wrap img {
+        width: min(100%, var(--legal-width));
+        margin: 0 auto;
+      }
+
+      .center-stage {
+        grid-area: product;
+        display: grid;
+        justify-items: center;
+        align-content: start;
+      }
+
+      .product-shell {
+        width: 100%;
+        display: grid;
+        justify-items: center;
+        padding-bottom: 0;
+      }
+
+      .product-stage {
+        justify-self: center;
+        align-self: start;
+        width: 100%;
+        height: 48vh;
+        min-height: 360px;
+        max-height: 520px;
+        pointer-events: none;
+        position: relative;
+        z-index: 30;
+      }
+
+      .product-stage model-viewer,
+      .product-fallback {
+        width: 128vw;
+        max-width: 760px;
+        height: 62vh;
+        max-height: 560px;
+        left: 50%;
+        top: 46%;
+        transform: translate(-50%, -50%);
+      }
+
+      .price {
+        position: absolute;
+        right: calc((100% - min(100%, var(--legal-width))) / 2);
+        bottom: 0.35rem;
+        left: auto;
+        top: auto;
+        transform: none;
+        margin: 0;
+        z-index: 5;
+      }
+
+      .price img {
+        width: clamp(3.8rem, 9vw, 5rem);
+        transform: rotate(-5deg);
+      }
+
+      .left-copy {
+        grid-area: copy;
+        width: min(100%, var(--legal-width));
+        justify-self: center;
+        margin-top: 0.15rem;
+        padding: 0;
+        font-size: clamp(1rem, 5vw, 1.45rem);
+        line-height: 1.28;
+        text-align: left;
+        position: static;
+        top: auto;
+        left: auto;
+        transform: none;
+      }
+
+      .left-copy p {
+        margin: 0 0 1rem;
+      }
+
+      .care-line {
+        gap: 0.45rem;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      .care-mark {
+        height: 2.45rem;
+        transform: rotate(-2deg) translateY(0.03em);
+      }
+
+      .legal {
+        grid-area: legal;
+        width: min(100%, var(--legal-width));
+        justify-self: center;
+        margin-top: 1.15rem;
+        padding: 0;
+        position: static;
+        transform: none;
+      }
+
+      .right-copy {
+        grid-area: contact;
+        width: min(100%, var(--legal-width));
+        max-width: none;
+        justify-self: center;
+        margin-top: 0.95rem;
+        padding: 0;
+        font-size: clamp(0.95rem, 4.8vw, 1.2rem);
+        text-align: left;
+        color: var(--muted);
+        position: static;
+        top: auto;
+        right: auto;
+        left: auto;
+        transform: none;
+      }
+
+      .right-copy p {
+        margin: 0;
+      }
     }
   </style>
 
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
-
 <body>
-  <div class="overlay overlay-light"></div>
-  <div class="overlay overlay-grain"></div>
+  <div class="overlay overlay-light" aria-hidden="true"></div>
+  <div class="overlay overlay-grain" aria-hidden="true"></div>
 
   <div class="scale-wrap">
-    <main class="page">
-
-      <!-- SEO-only content (invisible) -->
-      <h1 class="visually-hidden">
-        Helping Hand Gotu Kola Climbing Chalk
-      </h1>
-
-      <p class="visually-hidden">
-        Small-batch climbing chalk made with magnesium carbonate and Gotu Kola leaf powder.
-        Handmade by Osh. Net weight 70 grams. Designed for climbing and training grip.
-      </p>
-
-      <!-- KEEP EVERYTHING ELSE EXACTLY THE SAME BELOW -->
+    <main class="page" itemscope itemtype="https://schema.org/Product">
+      <meta itemprop="name" content="Helping Hand Gotu Kola Chalk">
+      <meta itemprop="description" content="Small-batch climbing chalk made with magnesium carbonate and Gotu Kola leaf powder. Net weight 70 grams.">
+      <meta itemprop="category" content="Climbing Chalk">
+      <meta itemprop="image" content="https://helpinghandchalk.co.uk/product-poster.png">
 
       <div class="logo-wrap">
-        <img src="logo.png" alt="Helping Hand Gotu Kola Chalk" draggable="false" />
+        <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Helping Hand Chalk</h1>
+        <img
+          src="logo.png"
+          alt="Helping Hand Gotu Kola Chalk"
+          draggable="false"
+          width="520"
+          height="auto"
+          decoding="async"
+          fetchpriority="high"
+        />
       </div>
 
-      <section class="left-copy">
+      <section class="left-copy" aria-label="Brand note">
         <p class="care-line">
           <span class="typed">Chalk.</span>
-          <img class="care-mark" src="CARE.png" alt="CARE." draggable="false" />
+          <img class="care-mark" src="CARE.png" alt="CARE." draggable="false" decoding="async" />
         </p>
         <p>From my hands to yours.</p>
         <p>~ Osh</p>
       </section>
 
-      <section class="center-stage">
+      <section class="center-stage" aria-label="Product">
         <div class="product-shell">
-          <div class="price">
+          <div class="price" aria-label="Price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            <meta itemprop="price" content="12.00">
+            <meta itemprop="priceCurrency" content="GBP">
+            <meta itemprop="availability" content="https://schema.org/InStock">
+            <link itemprop="url" href="https://buy.stripe.com/cNi3co4DIf2y2Vs1pDcAo00">
             <a
-              href="https://buy.stripe.com/cNi3co4DIf2y2Vs1pDcAo00"
               class="price-click"
-              aria-label="Buy Helping Hand Chalk for £12"
+              href="https://buy.stripe.com/cNi3co4DIf2y2Vs1pDcAo00"
+              aria-label="Buy Helping Hand Gotu Kola Chalk for £12"
+              onclick="handlePriceActivate(event)"
             >
-              <img src="£12.png" alt="Buy Helping Hand Chalk for £12" draggable="false" />
+              <img src="£12.png" alt="£12" draggable="false" decoding="async" />
             </a>
           </div>
 
           <div class="product-stage">
             <model-viewer
+              id="productViewer"
               src="product.glb"
               poster="product-poster.png"
-              alt="Helping Hand chalk tray"
+              alt="Helping Hand Gotu Kola chalk tray"
               auto-rotate
+              auto-rotate-delay="0"
+              rotation-per-second="3deg"
               camera-controls
+              interaction-prompt="none"
+              touch-action="none"
               disable-zoom
-            ></model-viewer>
+              disable-pan
+              exposure="1"
+              shadow-intensity="0"
+              environment-image="neutral"
+              environment-rotation="0deg 270deg 0deg"
+              camera-target="0m 0m 0m"
+              camera-orbit="-38deg 66deg 112%"
+              min-camera-orbit="auto 20deg 112%"
+              max-camera-orbit="auto 85deg 112%"
+              field-of-view="16deg"
+              scale="0.92 0.92 0.92"
+              interpolation-decay="400"
+              reveal="interaction"
+              loading="eager"
+              style="--poster-color: transparent;"
+            >
+              <div class="product-fallback" slot="poster">
+                <img
+                  src="product-poster.png"
+                  alt="Helping Hand Gotu Kola chalk tray"
+                  draggable="false"
+                  width="980"
+                  height="820"
+                  decoding="async"
+                  fetchpriority="high"
+                />
+              </div>
+            </model-viewer>
           </div>
         </div>
       </section>
 
-      <aside class="right-copy">
+      <aside class="right-copy" aria-label="Contact">
         <p>
-          <a href="mailto:osh@helpinghandchalk.co.uk">
-            osh@helpinghandchalk.co.uk
-          </a>
+          <a
+            class="email-link"
+            href="mailto:osh@helpinghandchalk.co.uk"
+            aria-label="Email osh@helpinghandchalk.co.uk"
+            onclick="openEmail(event)"
+          >osh@helpinghandchalk.co.uk</a>
         </p>
       </aside>
 
       <div class="legal">
         <p>
-          Net wt. 70 grams. Magnesium Carbonate, Gotu Kola Leaf Powder.
-          Use for climbing grip. Avoid inhalation. Keep dry.
-          © 2026 Helping Hand Chalk.
+          Net wt. 70 grams. Ingredients : Magnesium Carbonate (60g),
+          <a
+            class="search-link"
+            href="https://www.google.com/search?q=Gotu%20Kola%20Leaf&udm=50"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Search for Gotu Kola Leaf"
+            onclick="searchTerm(event, 'Gotu Kola Leaf')"
+          >Gotu Kola Leaf</a> Powder (10g).
+          Apply a small amount to hands as needed to improve grip during climbing or training.
+          Do not ingest. Avoid inhalation and contact with eyes. Keep out of reach of children.
+          Use within 3 months of opening for best performance. Plant powder can degrade over time.
+          Keep sealed when not in use. Store in a cool, dry place. Keep away from moisture.
+          Discontinue use if irritation occurs. Gotu Kola sourced from shade-grown crops in India.
+          No added colours, additives, or preservatives. Small-batch chalk. Natural variation in texture may occur.
+          May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺ © 2026 Helping Hand Chalk. All rights reserved.
         </p>
       </div>
-
     </main>
   </div>
 
+  <script>
+    const STRIPE_URL = 'https://buy.stripe.com/cNi3co4DIf2y2Vs1pDcAo00';
+
+    function searchTerm(event, term) {
+      if (event) {
+        event.preventDefault();
+      }
+      const url = 'https://www.google.com/search?q=' + encodeURIComponent(term) + '&udm=50';
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+
+    function openEmail(event) {
+      if (event) {
+        event.preventDefault();
+      }
+      window.location.href = 'mailto:osh@helpinghandchalk.co.uk';
+    }
+
+    function goToCheckout() {
+      window.location.href = STRIPE_URL;
+    }
+
+    function triggerHaptic(ms = 18) {
+      if ('vibrate' in navigator) {
+        navigator.vibrate(ms);
+      }
+    }
+
+    function handlePriceActivate(event) {
+      if (event) {
+        event.preventDefault();
+      }
+      triggerHaptic(16);
+      goToCheckout();
+    }
+
+    document.addEventListener('copy', (e) => e.preventDefault());
+    document.addEventListener('cut', (e) => e.preventDefault());
+    document.addEventListener('paste', (e) => e.preventDefault());
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.addEventListener('dragstart', (e) => e.preventDefault());
+    document.addEventListener('selectstart', (e) => e.preventDefault());
+
+    document.addEventListener('keydown', (e) => {
+      const key = e.key.toLowerCase();
+
+      if ((e.ctrlKey || e.metaKey) && ['a', 'c', 'x', 'v', 's', 'u', 'p'].includes(key)) {
+        e.preventDefault();
+      }
+
+      if (key === 'f12') {
+        e.preventDefault();
+      }
+
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i', 'j', 'c'].includes(key)) {
+        e.preventDefault();
+      }
+    });
+
+    document.addEventListener('gesturestart', (e) => e.preventDefault(), { passive: false });
+    document.addEventListener('gesturechange', (e) => e.preventDefault(), { passive: false });
+    document.addEventListener('gestureend', (e) => e.preventDefault(), { passive: false });
+
+    document.addEventListener('wheel', (e) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', (e) => {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, { passive: false });
+
+    const viewer = document.getElementById('productViewer');
+    const page = document.querySelector('.page');
+
+    const START_TARGET = '0m 0m 0m';
+    const START_SCALE = '0.92 0.92 0.92';
+    const START_ORBIT_DECLARATION = '-38deg 66deg 112%';
+    const RETURN_DURATION_MS = 320;
+    const TAP_MOVE_THRESHOLD = 10;
+
+    let booted = false;
+    let isPointerDown = false;
+    let activePointerId = null;
+    let cycleId = 0;
+    let returnRaf = null;
+    let resumeRaf = null;
+    let startOrbitSnapshot = null;
+    let lastHeldOrbit = null;
+    let fitRaf = null;
+
+    let pointerStartX = 0;
+    let pointerStartY = 0;
+    let pointerMoved = false;
+
+    function getViewportSize() {
+      if (window.visualViewport) {
+        return {
+          width: window.visualViewport.width,
+          height: window.visualViewport.height
+        };
+      }
+
+      return {
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
+    }
+
+    function scaleToFit() {
+      if (!page) return;
+
+      page.style.transform = 'scale(1)';
+
+      const viewport = getViewportSize();
+      const contentWidth = Math.max(page.scrollWidth, page.offsetWidth);
+      const contentHeight = Math.max(page.scrollHeight, page.offsetHeight);
+
+      const scaleX = viewport.width / contentWidth;
+      const scaleY = viewport.height / contentHeight;
+      const scale = Math.min(scaleX, scaleY, 1);
+
+      page.style.transform = `scale(${scale})`;
+      page.style.transformOrigin = 'top center';
+    }
+
+    function requestScaleToFit() {
+      if (fitRaf) {
+        cancelAnimationFrame(fitRaf);
+      }
+
+      fitRaf = requestAnimationFrame(() => {
+        fitRaf = null;
+        scaleToFit();
+      });
+    }
+
+    function stopRotationCompletely() {
+      viewer.autoRotate = false;
+      if (typeof viewer.resetTurntableRotation === 'function') {
+        viewer.resetTurntableRotation(0);
+      }
+    }
+
+    function cancelReturnAnimation() {
+      if (returnRaf) {
+        cancelAnimationFrame(returnRaf);
+        returnRaf = null;
+      }
+      if (resumeRaf) {
+        cancelAnimationFrame(resumeRaf);
+        resumeRaf = null;
+      }
+    }
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function orbitToString(orbit) {
+      return `${orbit.theta}rad ${orbit.phi}rad ${orbit.radius}m`;
+    }
+
+    function getLiveOrbit() {
+      const orbit = viewer.getCameraOrbit();
+      return {
+        theta: orbit.theta,
+        phi: orbit.phi,
+        radius: orbit.radius
+      };
+    }
+
+    function cloneOrbit(orbit) {
+      return {
+        theta: orbit.theta,
+        phi: orbit.phi,
+        radius: orbit.radius
+      };
+    }
+
+    function captureStartOrbit() {
+      startOrbitSnapshot = cloneOrbit(getLiveOrbit());
+      lastHeldOrbit = cloneOrbit(startOrbitSnapshot);
+    }
+
+    function setBasePose() {
+      viewer.cameraTarget = START_TARGET;
+      viewer.scale = START_SCALE;
+    }
+
+    function tweenBackToStart(thisCycle, fromOrbit) {
+      if (!startOrbitSnapshot || !fromOrbit) return;
+
+      const from = cloneOrbit(fromOrbit);
+      const to = cloneOrbit(startOrbitSnapshot);
+      const startTime = performance.now();
+
+      viewer.cameraControls = false;
+      viewer.jumpCameraToGoal = true;
+      setBasePose();
+      stopRotationCompletely();
+
+      const step = (now) => {
+        if (thisCycle !== cycleId) return;
+        if (isPointerDown) return;
+
+        const elapsed = now - startTime;
+        const t = Math.min(elapsed / RETURN_DURATION_MS, 1);
+        const eased = easeOutCubic(t);
+
+        viewer.cameraOrbit = orbitToString({
+          theta: lerp(from.theta, to.theta, eased),
+          phi: lerp(from.phi, to.phi, eased),
+          radius: lerp(from.radius, to.radius, eased)
+        });
+
+        if (t < 1) {
+          returnRaf = requestAnimationFrame(step);
+          return;
+        }
+
+        viewer.cameraOrbit = orbitToString(to);
+        lastHeldOrbit = cloneOrbit(to);
+
+        if (typeof viewer.resetTurntableRotation === 'function') {
+          viewer.resetTurntableRotation(0);
+        }
+
+        resumeRaf = requestAnimationFrame(() => {
+          if (thisCycle !== cycleId) return;
+          viewer.jumpCameraToGoal = false;
+          viewer.cameraControls = true;
+          viewer.autoRotate = true;
+        });
+      };
+
+      returnRaf = requestAnimationFrame(step);
+    }
+
+    function handlePressStart(event) {
+      if (!booted) return;
+
+      cycleId++;
+      cancelReturnAnimation();
+
+      isPointerDown = true;
+      activePointerId = event.pointerId ?? 'mouse';
+
+      pointerStartX = event.clientX ?? 0;
+      pointerStartY = event.clientY ?? 0;
+      pointerMoved = false;
+
+      viewer.cameraControls = true;
+      viewer.jumpCameraToGoal = false;
+      stopRotationCompletely();
+
+      lastHeldOrbit = cloneOrbit(getLiveOrbit());
+    }
+
+    function handlePressMove(event) {
+      if (!booted) return;
+      if (!isPointerDown) return;
+
+      if (
+        event &&
+        event.pointerId != null &&
+        activePointerId != null &&
+        event.pointerId !== activePointerId
+      ) {
+        return;
+      }
+
+      const x = event.clientX ?? pointerStartX;
+      const y = event.clientY ?? pointerStartY;
+      const dx = x - pointerStartX;
+      const dy = y - pointerStartY;
+
+      if (Math.hypot(dx, dy) > TAP_MOVE_THRESHOLD) {
+        pointerMoved = true;
+      }
+    }
+
+    function handlePressEnd(event) {
+      if (!booted) return;
+      if (!isPointerDown) return;
+
+      if (
+        event &&
+        event.pointerId != null &&
+        activePointerId != null &&
+        event.pointerId !== activePointerId
+      ) {
+        return;
+      }
+
+      const wasTap = !pointerMoved;
+
+      isPointerDown = false;
+      activePointerId = null;
+
+      const thisCycle = cycleId;
+      const releaseOrbit = cloneOrbit(lastHeldOrbit || getLiveOrbit());
+
+      cancelReturnAnimation();
+
+      requestAnimationFrame(() => {
+        if (thisCycle !== cycleId) return;
+        if (isPointerDown) return;
+
+        tweenBackToStart(thisCycle, releaseOrbit);
+
+        if (wasTap) {
+          triggerHaptic(16);
+          goToCheckout();
+        }
+      });
+    }
+
+    viewer.addEventListener('camera-change', () => {
+      if (!booted) return;
+      if (!isPointerDown) return;
+      lastHeldOrbit = cloneOrbit(getLiveOrbit());
+    });
+
+    viewer.addEventListener('load', () => {
+      stopRotationCompletely();
+      viewer.jumpCameraToGoal = true;
+      setBasePose();
+      viewer.cameraOrbit = START_ORBIT_DECLARATION;
+
+      requestAnimationFrame(() => {
+        captureStartOrbit();
+
+        requestAnimationFrame(() => {
+          viewer.jumpCameraToGoal = false;
+          viewer.cameraControls = true;
+          viewer.autoRotate = true;
+          booted = true;
+          requestScaleToFit();
+        });
+      });
+    });
+
+    window.addEventListener('load', requestScaleToFit);
+    window.addEventListener('resize', requestScaleToFit);
+    window.addEventListener('orientationchange', requestScaleToFit);
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', requestScaleToFit);
+      window.visualViewport.addEventListener('scroll', requestScaleToFit);
+    }
+
+    viewer.addEventListener('pointerdown', handlePressStart, true);
+    viewer.addEventListener('pointermove', handlePressMove, true);
+    window.addEventListener('pointerup', handlePressEnd, true);
+    window.addEventListener('pointercancel', handlePressEnd, true);
+    window.addEventListener('blur', () => handlePressEnd(), true);
+
+    (function setupRightEdgeSwipeCheckout() {
+      let startX = null;
+      let startY = null;
+      let currentX = null;
+      let currentY = null;
+      let isEdgeSwipe = false;
+      let hasTriggered = false;
+
+      const EDGE_THRESHOLD = 32;
+      const MIN_SWIPE_DISTANCE = 72;
+      const MAX_VERTICAL_DRIFT = 64;
+      const ACTIVE_MOBILE_WIDTH = 1100;
+
+      function isMobileLayout() {
+        return window.innerWidth <= ACTIVE_MOBILE_WIDTH;
+      }
+
+      document.addEventListener('touchstart', (e) => {
+        if (!isMobileLayout()) return;
+        if (e.touches.length !== 1) return;
+
+        const touch = e.touches[0];
+        const screenWidth = window.innerWidth;
+
+        startX = touch.clientX;
+        startY = touch.clientY;
+        currentX = touch.clientX;
+        currentY = touch.clientY;
+        hasTriggered = false;
+
+        isEdgeSwipe = (screenWidth - startX) <= EDGE_THRESHOLD;
+      }, { passive: true });
+
+      document.addEventListener('touchmove', (e) => {
+        if (!isMobileLayout()) return;
+        if (!isEdgeSwipe || startX === null || hasTriggered) return;
+        if (e.touches.length !== 1) return;
+
+        const touch = e.touches[0];
+        currentX = touch.clientX;
+        currentY = touch.clientY;
+
+        const deltaX = startX - currentX;
+        const deltaY = Math.abs(startY - currentY);
+
+        if (deltaY > MAX_VERTICAL_DRIFT) {
+          isEdgeSwipe = false;
+          return;
+        }
+
+        if (deltaX > MIN_SWIPE_DISTANCE) {
+          hasTriggered = true;
+          triggerHaptic(24);
+          goToCheckout();
+        }
+      }, { passive: true });
+
+      document.addEventListener('touchend', () => {
+        startX = null;
+        startY = null;
+        currentX = null;
+        currentY = null;
+        isEdgeSwipe = false;
+        hasTriggered = false;
+      }, { passive: true });
+
+      document.addEventListener('touchcancel', () => {
+        startX = null;
+        startY = null;
+        currentX = null;
+        currentY = null;
+        isEdgeSwipe = false;
+        hasTriggered = false;
+      }, { passive: true });
+    })();
+  </script>
 </body>
 </html>
