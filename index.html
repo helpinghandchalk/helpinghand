@@ -23,7 +23,6 @@
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
   />
 
-  <!-- Primary SEO -->
   <title>Helping Hand Chalk – Gotu Kola Climbing Chalk (£12)</title>
   <meta
     name="description"
@@ -41,7 +40,6 @@
 
   <link rel="canonical" href="https://helpinghandchalk.co.uk/" />
 
-  <!-- Open Graph / social preview -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Helping Hand Chalk" />
   <meta property="og:title" content="Helping Hand Chalk | Gotu Kola Climbing Chalk" />
@@ -54,7 +52,6 @@
   <meta property="og:image:alt" content="Helping Hand Gotu Kola climbing chalk product" />
   <meta property="og:locale" content="en_GB" />
 
-  <!-- Twitter/X preview -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Helping Hand Chalk | Gotu Kola Climbing Chalk" />
   <meta
@@ -63,7 +60,6 @@
   />
   <meta name="twitter:image" content="https://helpinghandchalk.co.uk/product-poster.png" />
 
-  <!-- Resource hints -->
   <link rel="dns-prefetch" href="//buy.stripe.com">
   <link rel="dns-prefetch" href="//js.stripe.com">
   <link rel="dns-prefetch" href="//unpkg.com">
@@ -71,14 +67,12 @@
   <link rel="preconnect" href="https://js.stripe.com" crossorigin>
   <link rel="preconnect" href="https://unpkg.com" crossorigin>
 
-  <!-- Preload critical local assets without changing layout -->
   <link rel="preload" href="logo.png" as="image" fetchpriority="high">
   <link rel="preload" href="product-poster.png" as="image" fetchpriority="high">
   <link rel="preload" href="CARE.png" as="image">
   <link rel="preload" href="£12.png" as="image">
   <link rel="preload" href="product.glb" as="fetch" type="model/gltf-binary">
 
-  <!-- Structured data for Google-rich understanding -->
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -669,6 +663,31 @@
         min-height: auto;
         transform: none !important;
         transform-origin: top center;
+      }
+
+      .product-shell {
+        width: min(100%, var(--legal-width));
+        margin: 0 auto;
+      }
+
+      .product-stage {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        min-height: 0;
+        max-height: none;
+      }
+
+      .product-stage model-viewer,
+      .product-fallback {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        max-height: none;
       }
     }
   </style>
