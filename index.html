@@ -181,7 +181,7 @@
       width: 100vw;
       min-height: 100vh;
       display: grid;
-      grid-template-columns: minmax(120px, 1fr) minmax(360px, 760px) minmax(120px, 1fr);
+      grid-template-columns: minmax(220px, 1fr) minmax(360px, 760px) minmax(220px, 1fr);
       grid-template-rows: auto 0.7fr auto auto 1fr;
       gap: 0;
       padding: 2.5rem 3.5rem 2rem;
@@ -229,21 +229,22 @@
       transform: translateY(var(--desktop-middle-shift));
     }
 
-    .right-copy {
-      grid-column: 2;
-      grid-row: 5;
-      justify-self: center;
-      align-self: end;
-      width: min(100%, var(--legal-width));
-      color: var(--muted);
-      text-align: left;
-      font-size: clamp(1.05rem, 1.2vw, 1.35rem);
-      line-height: 1.35;
-      letter-spacing: -0.02em;
-      position: relative;
-      z-index: 3;
-      margin: 0;
-    }
+.right-copy {
+  grid-column: 3;
+  grid-row: 3;
+  justify-self: center;
+  align-self: center;
+  width: max-content;
+  color: var(--muted);
+  text-align: left;
+  font-size: clamp(0.85rem, 0.95vw, 1.05rem);
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 3;
+  margin: 0;
+  transform: translateY(var(--desktop-middle-shift));
+}
 
     .left-copy p,
     .right-copy p {
