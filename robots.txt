@@ -35,3 +35,4 @@ User-agent: CCBot
 Allow: /
 
 Sitemap: https://helpinghandchalk.co.uk/sitemap.xml
+Sitemap: https://helpinghandchalk.co.uk/products.xml
