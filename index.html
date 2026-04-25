@@ -428,20 +428,16 @@
       cursor: pointer;
     }
 
-    /* --- Desktop-only text locking + email sizing --- */
-@media (min-width: 1101px) {
-  /* Keep CARE + Osh quote on one line */
-  .care-line,
-  .right-copy p {
-    white-space: nowrap;
-  }
+    @media (min-width: 1101px) {
+      .left-copy p,
+      .right-copy p {
+        white-space: nowrap;
+      }
 
-  /* Adjust email size (desktop only) */
-  .right-copy {
-    font-size: clamp(0.85rem, 0.95vw, 1.05rem);
-  }
-}
-
+      .right-copy {
+        font-size: clamp(0.85rem, 0.95vw, 1.05rem);
+      }
+    }
     @media (max-width: 1100px) {
       .page {
         grid-template-columns: 1fr;
