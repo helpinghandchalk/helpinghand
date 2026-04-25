@@ -1,0 +1,36 @@
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+  <channel>
+    <title>Helping Hand Chalk</title>
+    <link>https://helpinghandchalk.co.uk/</link>
+
+    <item>
+      <g:id>helping-hand-chalk-70g</g:id>
+
+      <title>Helping Hand Gotu Kola Climbing Chalk</title>
+
+      <description>
+Chalk, with a bit more care. Handmade in small batches using magnesium carbonate and Gotu Kola leaf powder.
+      </description>
+
+      <link>https://helpinghandchalk.co.uk/</link>
+      <g:image_link>https://helpinghandchalk.co.uk/product-poster.png</g:image_link>
+
+      <g:availability>in stock</g:availability>
+      <g:price>12.00 GBP</g:price>
+      <g:brand>Helping Hand</g:brand>
+      <g:condition>new</g:condition>
+
+      <!-- AI-critical additions -->
+      <g:product_type>Climbing > Climbing Equipment > Climbing Chalk</g:product_type>
+      <g:google_product_category>Sporting Goods > Outdoor Recreation > Climbing > Climbing Chalk</g:google_product_category>
+
+      <g:material>Magnesium carbonate, Gotu Kola leaf powder</g:material>
+
+      <g:custom_label_0>small batch</g:custom_label_0>
+      <g:custom_label_1>handmade</g:custom_label_1>
+      <g:custom_label_2>skin-friendly chalk</g:custom_label_2>
+
+    </item>
+
+  </channel>
+</rss>
