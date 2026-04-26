@@ -100,7 +100,6 @@
   <link rel="preconnect" href="https://unpkg.com" crossorigin>
 
   <link rel="preload" href="logo.png" as="image" fetchpriority="high">
-  <link rel="preload" href="product-poster.png" as="image" fetchpriority="high">
   <link rel="preload" href="CARE.png" as="image">
   <link rel="preload" href="£12.png" as="image">
   <link rel="preload" href="product.glb" as="fetch" type="model/gltf-binary">
@@ -674,7 +673,6 @@
             <model-viewer
               id="productViewer"
               src="product.glb"
-              poster="product-poster.png"
               alt="Helping Hand Gotu Kola chalk tray"
               auto-rotate
               auto-rotate-delay="0"
@@ -697,9 +695,6 @@
               interpolation-decay="400"
               style="--poster-color: transparent;"
             >
-              <div class="product-fallback" slot="poster">
-                <img src="product-poster.png" alt="Helping Hand Gotu Kola chalk tray" draggable="false" width="980" height="820" decoding="async" fetchpriority="high" />
-              </div>
             </model-viewer>
           </div>
         </div>
