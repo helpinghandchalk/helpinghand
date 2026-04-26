@@ -374,6 +374,9 @@
   grid-row: 4;
   justify-self: center;
   align-self: start;
+  text-align: justify;
+  text-align-last: justify;
+  text-justify: inter-word;
   width: min(100%, var(--legal-width));
   color: var(--faint);
   font-size: 0.78rem;
@@ -386,12 +389,9 @@
   position: relative;
   transform: translateY(var(--desktop-middle-shift));
 
-  height: 9rem;
+  max-height: 7.5rem; /* adjust if you want taller/shorter */
   overflow-y: auto;
   overflow-x: hidden;
-
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
 
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -401,18 +401,6 @@
 
 .legal::-webkit-scrollbar {
   display: none;
-}
-
-.legal-block {
-  height: 5.05rem;
-  overflow: hidden;
-
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-
-  text-align: justify;
-  text-align-last: justify;
-  text-justify: inter-word;
 }
 
 .legal p {
@@ -589,9 +577,8 @@
   position: static;
   transform: none;
 
-  height: 5.05rem;
+  max-height: 7.5rem;
   overflow-y: auto;
-  scroll-snap-type: y mandatory;
 }
 
       .right-copy {
