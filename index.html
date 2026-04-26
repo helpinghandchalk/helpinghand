@@ -374,9 +374,6 @@
   grid-row: 4;
   justify-self: center;
   align-self: start;
-  text-align: justify;
-  text-align-last: justify;
-  text-justify: inter-word;
   width: min(100%, var(--legal-width));
   color: var(--faint);
   font-size: 0.78rem;
@@ -388,17 +385,40 @@
   hyphens: none;
   position: relative;
   transform: translateY(var(--desktop-middle-shift));
+
+  height: 5.05rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
-    .legal p {
-      margin: 0;
-    }
+.legal::-webkit-scrollbar {
+  display: none;
+}
 
-    .legal p::after {
-      content: "";
-      display: inline-block;
-      width: 100%;
-    }
+.legal-block {
+  min-height: 5.05rem;
+  text-align: justify;
+  text-align-last: justify;
+  text-justify: inter-word;
+}
+
+.legal-block + .legal-block {
+  margin-top: 1.1rem;
+}
+
+.legal p {
+  margin: 0;
+}
+
+.legal p::after {
+  content: "";
+  display: inline-block;
+  width: 100%;
+}
 
     a,
     .search-link,
@@ -555,15 +575,17 @@
         transform: rotate(-2deg) translateY(0.03em);
       }
 
-      .legal {
-        grid-area: legal;
-        width: min(100%, var(--legal-width));
-        justify-self: center;
-        margin-top: 1.15rem;
-        padding: 0;
-        position: static;
-        transform: none;
-      }
+ .legal {
+  grid-area: legal;
+  width: min(100%, var(--legal-width));
+  justify-self: center;
+  margin-top: 1.15rem;
+  padding: 0;
+  position: static;
+  transform: none;
+
+  height: 5.05rem;
+}
 
       .right-copy {
         grid-area: contact;
@@ -703,19 +725,31 @@
         </a>
       </div>
 
-      <div class="legal">
-        <p>
-          Net wt. 70 grams. Ingredients : Magnesium Carbonate (60g),
-          <span class="search-link" role="link" tabindex="0" aria-label="Search for Gotu Kola Leaf" onclick="searchTerm('Gotu Kola Leaf')" onkeydown="handleSearchKey(event, 'Gotu Kola Leaf')">Gotu Kola Leaf</span> Powder (10g).
-          Apply a small amount to hands as needed to improve grip during climbing or training.
-          Do not ingest. Avoid inhalation and contact with eyes. Keep out of reach of children.
-          Use within 3 months of opening for best performance. Plant powder can degrade over time.
-          Keep sealed when not in use. Store in a cool, dry place. Keep away from moisture.
-          Discontinue use if irritation occurs. Gotu Kola sourced from shade-grown crops in India.
-          No added colours, additives, or preservatives. Small-batch chalk. Natural variation in texture may occur.
-          May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺ © 2026 Helping Hand Chalk. All rights reserved.
-        </p>
-      </div>
+     <div class="legal" aria-label="Legal information">
+  <div class="legal-block">
+    <p>
+      Net wt. 70 grams. Ingredients : Magnesium Carbonate (60g),
+      <span class="search-link" role="link" tabindex="0" aria-label="Search for Gotu Kola Leaf" onclick="searchTerm('Gotu Kola Leaf')" onkeydown="handleSearchKey(event, 'Gotu Kola Leaf')">Gotu Kola Leaf</span> Powder (10g).
+      Apply a small amount to hands as needed to improve grip during climbing or training.
+      Do not ingest. Avoid inhalation and contact with eyes. Keep out of reach of children.
+      Use within 3 months of opening for best performance. Plant powder can degrade over time.
+      Keep sealed when not in use. Store in a cool, dry place. Keep away from moisture.
+      Discontinue use if irritation occurs. Gotu Kola sourced from shade-grown crops in India.
+      No added colours, additives, or preservatives. Small-batch chalk. Natural variation in texture may occur.
+      May differ slightly from imagery. 100% recyclable packaging. Always recycle. ♺ © 2026 Helping Hand Chalk. All rights reserved.
+    </p>
+  </div>
+
+  <div class="legal-block">
+    <p>
+      Due to the nature of the product, all sales are final. No returns or refunds.
+      Packed and sent within 2–4 working days. UK delivery via Evri.
+      I’ll send you the tracking link when it’s on the way.
+      No plastic packaging is used - a small amount of chalk dust may escape the inner packaging during transit. This is normal.
+      If there’s an issue, email me. I’ll sort it.
+    </p>
+  </div>
+</div>
 
       <aside class="right-copy" aria-label="Contact">
         <p>
