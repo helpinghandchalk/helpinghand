@@ -102,15 +102,19 @@
   <link rel="preload" href="product.glb" as="fetch" type="model/gltf-binary">
 
   <style>
-    :root {
-      --bg: #E5E5DB;
-      --text: #161616;
-      --muted: rgba(22, 22, 22, 0.72);
-      --faint: rgba(22, 22, 22, 0.54);
-      --legal-width: 520px;
-      --desktop-sticker-width: 5rem;
-      --desktop-middle-shift: 2rem;
-    }
+:root {
+  --bg: #E5E5DB;
+  --text: #161616;
+  --muted: rgba(22, 22, 22, 0.72);
+  --faint: rgba(22, 22, 22, 0.54);
+  --legal-width: 520px;
+
+  --legal-line-height: 1.28em;
+  --legal-lines: 12;
+
+  --desktop-sticker-width: 5rem;
+  --desktop-middle-shift: 2rem;
+}
 
     * {
       box-sizing: border-box;
@@ -381,17 +385,18 @@
   width: min(100%, var(--legal-width));
   color: var(--faint);
   font-size: 0.78rem;
-  line-height: 1.28;
+
+  line-height: var(--legal-line-height);
+  max-height: calc(var(--legal-line-height) * var(--legal-lines));
+
   letter-spacing: 0.01em;
   text-transform: uppercase;
   margin-top: 5rem;
   z-index: 3;
   hyphens: none;
   position: relative;
+  transform: translateY(var(--desktop-middle-shift));
 
-  transform: translateY(var(--desktop-middle-shift)) translateZ(0);
-
-  max-height: 7.5rem;
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -399,13 +404,6 @@
   -ms-overflow-style: none;
   touch-action: pan-y;
   overscroll-behavior: contain;
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: geometricPrecision;
-  backface-visibility: hidden;
-  will-change: transform;
-  contain: paint;
 }
 
 .legal::-webkit-scrollbar {
@@ -586,7 +584,9 @@
   position: static;
   transform: none;
 
-  max-height: 7.5rem;
+  line-height: var(--legal-line-height);
+  max-height: calc(var(--legal-line-height) * var(--legal-lines));
+
   overflow-y: auto;
 }
 
