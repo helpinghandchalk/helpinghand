@@ -852,10 +852,25 @@
     document.addEventListener('gestureend', (e) => e.preventDefault(), { passive: false });
 
     document.addEventListener('wheel', (e) => {
-      if (e.ctrlKey) {
-        e.preventDefault();
-      }
-    }, { passive: false });
+  const legal = document.querySelector('.legal');
+  if (!legal) return;
+
+  if (e.ctrlKey) {
+    e.preventDefault();
+    return;
+  }
+
+  e.preventDefault();
+  legal.scrollTop += e.deltaY;
+}, { passive: false });
+
+  const legal = document.querySelector('.legal');
+
+  if (legal) {
+    e.preventDefault();
+    legal.scrollTop += e.deltaY;
+  }
+}, { passive: false });
 
     let lastTouchEnd = 0;
     document.addEventListener('touchend', (e) => {
