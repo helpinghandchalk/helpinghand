@@ -186,6 +186,7 @@
       overflow: visible;
       transform-origin: top center;
       will-change: transform;
+      backface-visibility: hidden;
     }
 
     .logo-wrap {
@@ -387,9 +388,10 @@
   z-index: 3;
   hyphens: none;
   position: relative;
-  transform: translateY(var(--desktop-middle-shift));
 
-  max-height: 7.5rem; /* adjust if you want taller/shorter */
+  transform: translateY(var(--desktop-middle-shift)) translateZ(0);
+
+  max-height: 7.5rem;
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -397,6 +399,13 @@
   -ms-overflow-style: none;
   touch-action: pan-y;
   overscroll-behavior: contain;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+  backface-visibility: hidden;
+  will-change: transform;
+  contain: paint;
 }
 
 .legal::-webkit-scrollbar {
