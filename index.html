@@ -470,14 +470,19 @@
       }
 
       .logo-wrap,
-      .left-copy,
-      .center-stage,
-      .right-copy,
-      .legal {
-        grid-column: 1;
-        margin: 0;
-        width: 100%;
-      }
+.left-copy,
+.center-stage,
+.right-copy {
+  grid-column: 1;
+  margin: 0;
+  width: 100%;
+}
+
+.legal {
+  grid-column: 1;
+  margin: 0;
+  width: min(100%, var(--legal-width));
+}
 
       .logo-wrap {
         grid-area: logo;
