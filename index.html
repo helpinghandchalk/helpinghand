@@ -374,50 +374,65 @@
       -webkit-user-drag: none;
     }
 
+:root {
+  --legal-width: 520px;
+  --legal-line-height: 1.28em;
+}
+
 .legal {
   grid-column: 2;
   grid-row: 4;
   justify-self: center;
   align-self: start;
-  text-align: justify;
-  text-align-last: justify;
-  text-justify: inter-word;
   width: min(100%, var(--legal-width));
   color: var(--faint);
-  font-size: 0.78rem;
-
+  font-size: clamp(0.58rem, 1.45vw, 0.78rem);
   line-height: var(--legal-line-height);
-  max-height: calc(var(--legal-line-height) * var(--legal-lines));
-
   letter-spacing: 0.01em;
   text-transform: uppercase;
   margin-top: 5rem;
   z-index: 3;
-  hyphens: none;
   position: relative;
   transform: translateY(var(--desktop-middle-shift));
 
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  overflow: hidden;
   touch-action: pan-y;
   overscroll-behavior: contain;
 }
 
-.legal::-webkit-scrollbar {
-  display: none;
-}
-
 .legal p {
   margin: 0;
+  width: 100%;
+  min-height: calc(var(--legal-line-height) * 1em);
+  display: none;
+
+  text-align: justify;
+  text-align-last: justify;
+  text-justify: inter-word;
+  hyphens: none;
+}
+
+.legal p.is-active {
+  display: block;
 }
 
 .legal p::after {
   content: "";
   display: inline-block;
   width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .legal {
+    grid-area: legal;
+    width: min(100%, var(--legal-width));
+    justify-self: center;
+    margin-top: 1.15rem;
+    padding: 0;
+    position: static;
+    transform: none;
+    font-size: clamp(0.48rem, 2.15vw, 0.72rem);
+  }
 }
 
     a,
@@ -729,7 +744,7 @@
       </div>
 
      <div class="legal" aria-label="Legal information">
-    <p>
+    <p class="is-active">
       Net wt. 70 grams. Ingredients : Magnesium Carbonate (60g),
       <span class="search-link" role="link" tabindex="0" aria-label="Search for Gotu Kola Leaf" onclick="searchTerm('Gotu Kola Leaf')" onkeydown="handleSearchKey(event, 'Gotu Kola Leaf')">Gotu Kola Leaf</span> Powder (10g).
       Apply a small amount to hands as needed to improve grip during climbing or training.
@@ -851,8 +866,29 @@
     document.addEventListener('gesturechange', (e) => e.preventDefault(), { passive: false });
     document.addEventListener('gestureend', (e) => e.preventDefault(), { passive: false });
 
-    document.addEventListener('wheel', (e) => {
-  const legal = document.querySelector('.legal');
+    const legal = document.querySelector('.legal');
+const legalParagraphs = legal ? Array.from(legal.querySelectorAll('p')) : [];
+let legalIndex = 0;
+let legalWheelLock = false;
+let legalTouchStartY = null;
+
+function showLegalParagraph(index) {
+  if (!legalParagraphs.length) return;
+
+  legalIndex = Math.max(0, Math.min(index, legalParagraphs.length - 1));
+
+  legalParagraphs.forEach((p, i) => {
+    p.classList.toggle('is-active', i === legalIndex);
+  });
+
+  requestScaleToFit();
+}
+
+function moveLegalParagraph(direction) {
+  showLegalParagraph(legalIndex + direction);
+}
+
+document.addEventListener('wheel', (e) => {
   if (!legal) return;
 
   if (e.ctrlKey) {
@@ -861,8 +897,45 @@
   }
 
   e.preventDefault();
-  legal.scrollTop += e.deltaY;
+
+  if (legalWheelLock) return;
+
+  const direction = e.deltaY > 0 ? 1 : -1;
+  moveLegalParagraph(direction);
+
+  legalWheelLock = true;
+  setTimeout(() => {
+    legalWheelLock = false;
+  }, 420);
 }, { passive: false });
+
+document.addEventListener('touchstart', (e) => {
+  if (!legal) return;
+  if (e.touches.length !== 1) return;
+
+  legalTouchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+document.addEventListener('touchmove', (e) => {
+  if (!legal || legalTouchStartY === null) return;
+  if (e.touches.length !== 1) return;
+
+  const currentY = e.touches[0].clientY;
+  const deltaY = legalTouchStartY - currentY;
+
+  if (Math.abs(deltaY) < 36) return;
+
+  e.preventDefault();
+
+  moveLegalParagraph(deltaY > 0 ? 1 : -1);
+  legalTouchStartY = null;
+}, { passive: false });
+
+document.addEventListener('touchend', () => {
+  legalTouchStartY = null;
+}, { passive: true });
+
+showLegalParagraph(0);
 
     let lastTouchEnd = 0;
     document.addEventListener('touchend', (e) => {
