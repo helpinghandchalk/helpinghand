@@ -922,23 +922,38 @@ document.addEventListener('touchend', () => {
   legalTouchStartY = null;
 }, { passive: true });
 
-function fitActiveLegalParagraph() {
-  if (!legal) return;
-
-  const active = legal.querySelector('p.is-active');
-  if (!active) return;
+function fitAllLegalParagraphs() {
+  if (!legal || !legalParagraphs.length) return;
 
   let size = 0.78;
   const minSize = 0.42;
   const lineHeight = 1.28;
 
-  active.style.fontSize = size + 'rem';
-  active.style.lineHeight = lineHeight;
+  legalParagraphs.forEach(p => {
+    p.style.fontSize = size + 'rem';
+    p.style.lineHeight = lineHeight;
+  });
 
-  while (active.scrollHeight > legal.clientHeight && size > minSize) {
-    size -= 0.02;
-    active.style.fontSize = size + 'rem';
-    active.style.lineHeight = lineHeight;
+  let fits = false;
+
+  while (!fits && size > minSize) {
+    fits = true;
+
+    for (const p of legalParagraphs) {
+      if (p.scrollHeight > legal.clientHeight) {
+        fits = false;
+        break;
+      }
+    }
+
+    if (!fits) {
+      size -= 0.02;
+
+      legalParagraphs.forEach(p => {
+        p.style.fontSize = size + 'rem';
+        p.style.lineHeight = lineHeight;
+      });
+    }
   }
 }
 
