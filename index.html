@@ -853,6 +853,7 @@ const legalParagraphs = legal ? Array.from(legal.querySelectorAll('p')) : [];
 let legalIndex = -1;
 let legalWheelLock = false;
 let legalTouchStartY = null;
+let legalTouchStartX = null;
 
 function showLegalParagraph(index) {
   if (!legalParagraphs.length) return;
@@ -904,21 +905,35 @@ document.addEventListener('touchstart', (e) => {
   if (e.touches.length !== 1) return;
 
   legalTouchStartY = e.touches[0].clientY;
+  legalTouchStartX = e.touches[0].clientX;
 }, { passive: true });
 
 document.addEventListener('touchmove', (e) => {
   if (!legal || legalTouchStartY === null) return;
   if (e.touches.length !== 1) return;
 
-  const currentY = e.touches[0].clientY;
-  const deltaY = legalTouchStartY - currentY;
+  const touch = e.touches[0];
 
-  if (Math.abs(deltaY) < 36) return;
+  const deltaY = legalTouchStartY - touch.clientY;
+  const deltaX = legalTouchStartX - touch.clientX;
+
+  const absY = Math.abs(deltaY);
+  const absX = Math.abs(deltaX);
+
+  if (absY < 36 && absX < 36) return;
 
   e.preventDefault();
 
-  moveLegalParagraph(deltaY > 0 ? 1 : -1);
+  if (absX > absY) {
+
+    moveLegalParagraph(deltaX > 0 ? 1 : -1);
+  } else {
+    
+    moveLegalParagraph(deltaY > 0 ? 1 : -1);
+  }
+
   legalTouchStartY = null;
+  legalTouchStartX = null;
 }, { passive: false });
 
 document.addEventListener('touchend', () => {
