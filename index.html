@@ -374,11 +374,6 @@
       -webkit-user-drag: none;
     }
 
-:root {
-  --legal-width: 520px;
-  --legal-line-height: 1.28em;
-}
-
 .legal {
   grid-column: 2;
   grid-row: 4;
@@ -589,21 +584,6 @@
         height: 2.45rem;
         transform: rotate(-2deg) translateY(0.03em);
       }
-
-.legal {
-  grid-area: legal;
-  width: min(100%, var(--legal-width));
-  justify-self: center;
-  margin-top: 1.15rem;
-  padding: 0;
-  position: static;
-  transform: none;
-
-  line-height: var(--legal-line-height);
-  max-height: calc(var(--legal-line-height) * var(--legal-lines));
-
-  overflow-y: auto;
-}
 
       .right-copy {
         grid-area: contact;
