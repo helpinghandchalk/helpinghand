@@ -311,16 +311,23 @@
   background: transparent;
   display: block;
   overflow: visible;
+  pointer-events: none;
 }
 
-    model-viewer {
-      position: relative;
-      z-index: 40;
-      pointer-events: auto;
-      clip-path: inset(35% 35% 35% 35%);
-      touch-action: none;
-      cursor: pointer;
-    }
+model-viewer {
+  position: relative;
+  z-index: 40;
+  touch-action: none;
+  cursor: pointer;
+}
+
+.product-hitbox {
+  position: absolute;
+  inset: 0;
+  z-index: 80;
+  cursor: pointer;
+  touch-action: none;
+}
 
     .product-fallback img {
       width: 100%;
@@ -725,6 +732,7 @@ inset: 0;
               style="--poster-color: transparent;"
             >
             </model-viewer>
+            <div class="product-hitbox" aria-hidden="true"></div>
           </div>
         </div>
       </section>
@@ -1014,7 +1022,8 @@ if (window.visualViewport) {
     }, { passive: false });
 
     const viewer = document.getElementById('productViewer');
-    const page = document.querySelector('.page');
+const productHitbox = document.querySelector('.product-hitbox');
+const page = document.querySelector('.page');
 
     const START_TARGET = '0m 0m 0m';
     const START_SCALE = '0.92 0.92 0.92';
@@ -1307,11 +1316,11 @@ if (window.visualViewport) {
       window.visualViewport.addEventListener('scroll', requestScaleToFit);
     }
 
-    viewer.addEventListener('pointerdown', handlePressStart, true);
-    viewer.addEventListener('pointermove', handlePressMove, true);
-    window.addEventListener('pointerup', handlePressEnd, true);
-    window.addEventListener('pointercancel', handlePressEnd, true);
-    window.addEventListener('blur', () => handlePressEnd(), true);
+    productHitbox.addEventListener('pointerdown', handlePressStart, true);
+productHitbox.addEventListener('pointermove', handlePressMove, true);
+window.addEventListener('pointerup', handlePressEnd, true);
+window.addEventListener('pointercancel', handlePressEnd, true);
+window.addEventListener('blur', () => handlePressEnd(), true);
 
     (function setupRightEdgeSwipeCheckout() {
       let startX = null;
