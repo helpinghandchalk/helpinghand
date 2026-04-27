@@ -930,12 +930,15 @@ function fitActiveLegalParagraph() {
 
   let size = 0.78;
   const minSize = 0.42;
+  const lineHeight = 1.28;
 
   active.style.fontSize = size + 'rem';
+  active.style.lineHeight = lineHeight;
 
   while (active.scrollHeight > legal.clientHeight && size > minSize) {
     size -= 0.02;
     active.style.fontSize = size + 'rem';
+    active.style.lineHeight = lineHeight;
   }
 }
 
