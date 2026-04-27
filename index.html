@@ -526,16 +526,16 @@ inset: 0;
         z-index: 30;
       }
 
-      .product-stage model-viewer,
-      .product-fallback {
-        width: 128vw;
-        max-width: 760px;
-        height: 62vh;
-        max-height: 560px;
-        left: 50%;
-        top: 46%;
-        transform: translate(-50%, -50%);
-      }
+     .product-stage model-viewer,
+.product-fallback {
+  width: min(100%, var(--legal-width));
+  max-width: var(--legal-width);
+  height: auto;
+  aspect-ratio: 1 / 1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
 
       .price {
         grid-area: product;
