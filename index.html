@@ -855,13 +855,15 @@ let legalTouchStartY = null;
 function showLegalParagraph(index) {
   if (!legalParagraphs.length) return;
 
-  legalIndex = Math.max(0, Math.min(index, legalParagraphs.length - 1));
+  const clamped = Math.max(0, Math.min(index, legalParagraphs.length - 1));
+
+  if (clamped === legalIndex) return;
+
+  legalIndex = clamped;
 
   legalParagraphs.forEach((p, i) => {
     p.classList.toggle('is-active', i === legalIndex);
   });
-
-  requestScaleToFit();
 }
 
 function moveLegalParagraph(direction) {
