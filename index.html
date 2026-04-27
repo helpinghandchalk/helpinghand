@@ -865,7 +865,13 @@ function showLegalParagraph(index) {
 }
 
 function moveLegalParagraph(direction) {
-  showLegalParagraph(legalIndex + direction);
+  const nextIndex = legalIndex + direction;
+
+  if (nextIndex < 0 || nextIndex >= legalParagraphs.length) {
+    return;
+  }
+
+  showLegalParagraph(nextIndex);
 }
 
 document.addEventListener('wheel', (e) => {
