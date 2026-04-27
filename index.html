@@ -862,7 +862,7 @@ function showLegalParagraph(index) {
     p.classList.toggle('is-active', i === legalIndex);
   });
 
-  fitActiveLegalParagraph();
+  fitAllLegalParagraphs();
 }
 
 function moveLegalParagraph(direction) {
@@ -957,9 +957,10 @@ function fitAllLegalParagraphs() {
   }
 }
 
-    window.addEventListener('load', () => showLegalParagraph(0));
-window.addEventListener('resize', fitActiveLegalParagraph);
-showLegalParagraph(0);
+    window.addEventListener('load', () => {
+  showLegalParagraph(0);
+  fitAllLegalParagraphs();
+});
 
     let lastTouchEnd = 0;
     document.addEventListener('touchend', (e) => {
