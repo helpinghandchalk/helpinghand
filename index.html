@@ -627,6 +627,12 @@ inset: 0;
         touch-action: pan-y;
       }
 
+      .legal {
+  height: 8.2em;
+  font-size: clamp(0.42rem, 1.45vw, 0.68rem);
+  line-height: 1.2;
+}
+
       body {
         overflow-y: auto;
       }
@@ -961,9 +967,12 @@ document.addEventListener('touchend', () => {
 function fitAllLegalParagraphs() {
   if (!legal || !legalParagraphs.length) return;
 
-  let size = 0.86;
-const minSize = 0.52;
-  const lineHeight = 1.28;
+  const isMobileLandscape =
+    window.innerWidth <= 1100 && window.innerWidth > window.innerHeight;
+
+  let size = isMobileLandscape ? 0.72 : 0.86;
+  const minSize = isMobileLandscape ? 0.36 : 0.52;
+  const lineHeight = isMobileLandscape ? 1.2 : 1.28;
 
   legalParagraphs.forEach(p => {
     p.style.fontSize = size + 'rem';
