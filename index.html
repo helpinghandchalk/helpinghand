@@ -380,6 +380,7 @@
   justify-self: center;
   align-self: start;
   width: min(100%, var(--legal-width));
+  height: 12.8em;
   color: var(--faint);
   font-size: clamp(0.58rem, 1.45vw, 0.78rem);
   line-height: var(--legal-line-height);
@@ -389,7 +390,6 @@
   z-index: 3;
   position: relative;
   transform: translateY(var(--desktop-middle-shift));
-
   overflow: hidden;
   contain: layout paint;
   touch-action: pan-y;
@@ -399,9 +399,8 @@
 .legal p {
   margin: 0;
   width: 100%;
-  min-height: calc(var(--legal-line-height) * 1em);
+  height: 100%;
   display: none;
-
   text-align: justify;
   text-align-last: justify;
   text-justify: inter-word;
@@ -410,12 +409,6 @@
 
 .legal p.is-active {
   display: block;
-}
-
-.legal p::after {
-  content: "";
-  display: inline-block;
-  width: 100%;
 }
 
 @media (max-width: 1100px) {
@@ -849,7 +842,7 @@
 
     const legal = document.querySelector('.legal');
 const legalParagraphs = legal ? Array.from(legal.querySelectorAll('p')) : [];
-let legalIndex = 0;
+let legalIndex = -1;
 let legalWheelLock = false;
 let legalTouchStartY = null;
 
@@ -858,13 +851,13 @@ function showLegalParagraph(index) {
 
   const clamped = Math.max(0, Math.min(index, legalParagraphs.length - 1));
 
-  if (clamped === legalIndex) return;
-
   legalIndex = clamped;
 
   legalParagraphs.forEach((p, i) => {
     p.classList.toggle('is-active', i === legalIndex);
   });
+
+  fitActiveLegalParagraph();
 }
 
 function moveLegalParagraph(direction) {
@@ -924,6 +917,25 @@ document.addEventListener('touchend', () => {
   legalTouchStartY = null;
 }, { passive: true });
 
+function fitActiveLegalParagraph() {
+  if (!legal) return;
+
+  const active = legal.querySelector('p.is-active');
+  if (!active) return;
+
+  let size = 0.78;
+  const minSize = 0.42;
+
+  active.style.fontSize = size + 'rem';
+
+  while (active.scrollHeight > legal.clientHeight && size > minSize) {
+    size -= 0.02;
+    active.style.fontSize = size + 'rem';
+  }
+}
+
+    window.addEventListener('load', () => showLegalParagraph(0));
+window.addEventListener('resize', fitActiveLegalParagraph);
 showLegalParagraph(0);
 
     let lastTouchEnd = 0;
