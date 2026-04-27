@@ -904,6 +904,12 @@ document.addEventListener('touchstart', (e) => {
   if (!legal) return;
   if (e.touches.length !== 1) return;
 
+  if (!e.target.closest('.legal')) {
+    legalTouchStartY = null;
+    legalTouchStartX = null;
+    return;
+  }
+
   legalTouchStartY = e.touches[0].clientY;
   legalTouchStartX = e.touches[0].clientX;
 }, { passive: true });
