@@ -293,8 +293,8 @@
 
 .product-stage {
   position: relative;
-  width: 260px;
-  height: 260px;
+  width: 560px;
+  height: 360px;
   overflow: visible;
   z-index: 30;
   pointer-events: none;
@@ -306,29 +306,21 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -52%);
-  width: 980px;
-  height: 820px;
+  width: 430px;
+  height: 430px;
   background: transparent;
   display: block;
   overflow: visible;
-  pointer-events: none;
 }
 
 model-viewer {
   position: relative;
   z-index: 40;
+  pointer-events: auto;
   touch-action: none;
   cursor: pointer;
 }
-
-.product-hitbox {
-  position: absolute;
-  inset: 0;
-  z-index: 80;
-  cursor: pointer;
-  touch-action: none;
-}
-
+    
     .product-fallback img {
       width: 100%;
       height: 100%;
@@ -723,16 +715,15 @@ inset: 0;
               environment-image="neutral"
               environment-rotation="0deg 270deg 0deg"
               camera-target="0m 0m 0m"
-              camera-orbit="-38deg 66deg 112%"
-              min-camera-orbit="auto 20deg 112%"
-              max-camera-orbit="auto 85deg 112%"
-              field-of-view="16deg"
-              scale="0.92 0.92 0.92"
+              camera-orbit="-38deg 66deg 72%"
+              min-camera-orbit="auto 20deg 72%"
+              max-camera-orbit="auto 85deg 72%"
+              field-of-view="14deg"
+              scale="1.15 1.15 1.15"
               interpolation-decay="400"
               style="--poster-color: transparent;"
             >
             </model-viewer>
-            <div class="product-hitbox" aria-hidden="true"></div>
           </div>
         </div>
       </section>
@@ -1022,7 +1013,6 @@ if (window.visualViewport) {
     }, { passive: false });
 
     const viewer = document.getElementById('productViewer');
-const productHitbox = document.querySelector('.product-hitbox');
 const page = document.querySelector('.page');
 
     const START_TARGET = '0m 0m 0m';
@@ -1316,8 +1306,8 @@ const page = document.querySelector('.page');
       window.visualViewport.addEventListener('scroll', requestScaleToFit);
     }
 
-    productHitbox.addEventListener('pointerdown', handlePressStart, true);
-productHitbox.addEventListener('pointermove', handlePressMove, true);
+    viewer.addEventListener('pointerdown', handlePressStart, true);
+viewer.addEventListener('pointermove', handlePressMove, true);
 window.addEventListener('pointerup', handlePressEnd, true);
 window.addEventListener('pointercancel', handlePressEnd, true);
 window.addEventListener('blur', () => handlePressEnd(), true);
