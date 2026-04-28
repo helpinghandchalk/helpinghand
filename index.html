@@ -457,6 +457,18 @@ inset: 0;
       cursor: pointer;
     }
 
+    .lid-hover-trigger {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.lid-hover-trigger:hover,
+.lid-hover-trigger:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
         @media (min-width: 1101px) {
       .left-copy p,
       .right-copy p {
@@ -762,6 +774,15 @@ scale="0.92 0.92 0.92"
       Zero plastic. A small amount (≤ 0.5g) of chalk may escape the lid during transit. 
       This is normal. If there’s an issue, email Osh :
     </p>
+       <p>
+  For a closer look at the lid, hover over
+  <span
+    class="lid-hover-trigger"
+    role="link"
+    tabindex="0"
+    aria-label="Preview alternate lid artwork"
+  >this lid artwork</span>.
+</p>
   </div>
 
       <aside class="right-copy" aria-label="Contact">
@@ -782,6 +803,7 @@ scale="0.92 0.92 0.92"
           Helping Hand Gotu Kola Chalk is designed for climbers who want consistent grip without excessive dryness.
           Suitable for indoor climbing, bouldering, and outdoor routes.
         </p>
+        
       </section>
     </main>
   </div>
@@ -1025,6 +1047,10 @@ if (window.visualViewport) {
 
     const viewer = document.getElementById('productViewer');
 const page = document.querySelector('.page');
+const lidHoverTrigger = document.querySelector('.lid-hover-trigger');
+
+const DEFAULT_MODEL = 'product.glb';
+const HOVER_LID_MODEL = 'product-lid-hover.glb';
 
     const START_TARGET = '0m 0m 0m';
     const START_SCALE = '0.92 0.92 0.92';
@@ -1127,6 +1153,23 @@ const page = document.querySelector('.page');
     function orbitToString(orbit) {
       return `${orbit.theta}rad ${orbit.phi}rad ${orbit.radius}m`;
     }
+
+function setProductModel(src) {
+  if (!viewer) return;
+  if (viewer.getAttribute('src') === src) return;
+
+  const liveOrbit = booted ? getLiveOrbit() : null;
+
+  viewer.setAttribute('src', src);
+
+  viewer.addEventListener('load', () => {
+    setBasePose();
+
+    if (liveOrbit) {
+      viewer.cameraOrbit = orbitToString(liveOrbit);
+    }
+  }, { once: true });
+}
 
     function getLiveOrbit() {
       const orbit = viewer.getCameraOrbit();
@@ -1307,6 +1350,24 @@ const page = document.querySelector('.page');
         });
       });
     });
+
+    if (lidHoverTrigger) {
+  lidHoverTrigger.addEventListener('mouseenter', () => {
+    setProductModel(HOVER_LID_MODEL);
+  });
+
+  lidHoverTrigger.addEventListener('mouseleave', () => {
+    setProductModel(DEFAULT_MODEL);
+  });
+
+  lidHoverTrigger.addEventListener('focus', () => {
+    setProductModel(HOVER_LID_MODEL);
+  });
+
+  lidHoverTrigger.addEventListener('blur', () => {
+    setProductModel(DEFAULT_MODEL);
+  });
+}
 
     window.addEventListener('load', requestScaleToFit);
     window.addEventListener('resize', requestScaleToFit);
