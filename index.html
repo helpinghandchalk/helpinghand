@@ -1049,8 +1049,9 @@ if (window.visualViewport) {
 const page = document.querySelector('.page');
 const lidHoverTrigger = document.querySelector('.lid-hover-trigger');
 
-const DEFAULT_MODEL = 'product.glb';
-const HOVER_LID_MODEL = 'product-lid-hover.glb';
+let lidMaterial = null;
+let defaultTexture = null;
+let hoverTexture = null;
 
     const START_TARGET = '0m 0m 0m';
     const START_SCALE = '0.92 0.92 0.92';
@@ -1153,23 +1154,6 @@ const HOVER_LID_MODEL = 'product-lid-hover.glb';
     function orbitToString(orbit) {
       return `${orbit.theta}rad ${orbit.phi}rad ${orbit.radius}m`;
     }
-
-function setProductModel(src) {
-  if (!viewer) return;
-  if (viewer.getAttribute('src') === src) return;
-
-  const liveOrbit = booted ? getLiveOrbit() : null;
-
-  viewer.setAttribute('src', src);
-
-  viewer.addEventListener('load', () => {
-    setBasePose();
-
-    if (liveOrbit) {
-      viewer.cameraOrbit = orbitToString(liveOrbit);
-    }
-  }, { once: true });
-}
 
     function getLiveOrbit() {
       const orbit = viewer.getCameraOrbit();
@@ -1326,46 +1310,69 @@ function setProductModel(src) {
       });
     }
 
-    viewer.addEventListener('camera-change', () => {
-      if (!booted) return;
-      if (!isPointerDown) return;
-      lastHeldOrbit = cloneOrbit(getLiveOrbit());
+   viewer.addEventListener('load', () => {
+  if (booted) return;
+
+  stopRotationCompletely();
+  viewer.jumpCameraToGoal = true;
+  setBasePose();
+  viewer.cameraOrbit = START_ORBIT_DECLARATION;
+
+  requestAnimationFrame(() => {
+    captureStartOrbit();
+
+    requestAnimationFrame(() => {
+      viewer.jumpCameraToGoal = false;
+      viewer.cameraControls = true;
+      viewer.autoRotate = true;
+      booted = true;
+      requestScaleToFit();
+
+      const materials = viewer.model.materials;
+
+   
+      lidMaterial = materials.find(m => m.name === 'Lid');
+
+      if (lidMaterial) {
+        const baseColor = lidMaterial.pbrMetallicRoughness.baseColorTexture;
+
+        if (baseColor) {
+          defaultTexture = baseColor.texture;
+
+          viewer.createTexture('lid-hover.png').then(tex => {
+            hoverTexture = tex;
+          });
+        }
+      }
+
     });
-
-    viewer.addEventListener('load', () => {
-      stopRotationCompletely();
-      viewer.jumpCameraToGoal = true;
-      setBasePose();
-      viewer.cameraOrbit = START_ORBIT_DECLARATION;
-
-      requestAnimationFrame(() => {
-        captureStartOrbit();
-
-        requestAnimationFrame(() => {
-          viewer.jumpCameraToGoal = false;
-          viewer.cameraControls = true;
-          viewer.autoRotate = true;
-          booted = true;
-          requestScaleToFit();
-        });
-      });
-    });
+  });
+});
 
     if (lidHoverTrigger) {
   lidHoverTrigger.addEventListener('mouseenter', () => {
-    setProductModel(HOVER_LID_MODEL);
+    if (lidMaterial && hoverTexture) {
+      lidMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(hoverTexture);
+    }
   });
 
   lidHoverTrigger.addEventListener('mouseleave', () => {
-    setProductModel(DEFAULT_MODEL);
+    if (lidMaterial && defaultTexture) {
+      lidMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(defaultTexture);
+    }
   });
 
+  // accessibility
   lidHoverTrigger.addEventListener('focus', () => {
-    setProductModel(HOVER_LID_MODEL);
+    if (lidMaterial && hoverTexture) {
+      lidMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(hoverTexture);
+    }
   });
 
   lidHoverTrigger.addEventListener('blur', () => {
-    setProductModel(DEFAULT_MODEL);
+    if (lidMaterial && defaultTexture) {
+      lidMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(defaultTexture);
+    }
   });
 }
 
