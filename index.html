@@ -1334,15 +1334,17 @@ let hoverTexture = null;
       lidMaterial = materials.find(m => m.name === 'Artwork');
 
       if (lidMaterial) {
-        const baseColor = lidMaterial.pbrMetallicRoughness.baseColorTexture;
+        const baseColor = lidMaterial.pbrMetallicRoughness.baseColorTextureInfo;
 
-        if (baseColor) {
-          defaultTexture = baseColor.texture;
+if (baseColor) {
+  defaultTexture = baseColor.texture;
 
-          viewer.createTexture('lid-hover.png').then(tex => {
-            hoverTexture = tex;
-          });
-        }
+  viewer.createTexture('lid-hover.png').then(tex => {
+    hoverTexture = tex;
+  }).catch(err => {
+    console.error('Could not load lid-hover.png', err);
+  });
+}
       }
 
     });
@@ -1352,26 +1354,26 @@ let hoverTexture = null;
     if (lidHoverTrigger) {
   lidHoverTrigger.addEventListener('mouseenter', () => {
     if (lidMaterial && hoverTexture) {
-      lidMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(hoverTexture);
+      lidMaterial.pbrMetallicRoughness.baseColorTextureInfo.setTexture(hoverTexture);
     }
   });
 
   lidHoverTrigger.addEventListener('mouseleave', () => {
     if (lidMaterial && defaultTexture) {
-      lidMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(defaultTexture);
+      lidMaterial.pbrMetallicRoughness.baseColorTextureInfo.setTexture(defaultTexture);
     }
   });
 
   // accessibility
   lidHoverTrigger.addEventListener('focus', () => {
     if (lidMaterial && hoverTexture) {
-      lidMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(hoverTexture);
+      lidMaterial.pbrMetallicRoughness.baseColorTextureInfo.setTexture(hoverTexture);
     }
   });
 
   lidHoverTrigger.addEventListener('blur', () => {
     if (lidMaterial && defaultTexture) {
-      lidMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(defaultTexture);
+      lidMaterial.pbrMetallicRoughness.baseColorTextureInfo.setTexture(defaultTexture);
     }
   });
 }
